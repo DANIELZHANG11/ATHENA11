@@ -8,7 +8,16 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Index, Integer, String, Text
+from sqlalchemy import (
+    Boolean,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -301,7 +310,7 @@ class UserSetting(Base, TimestampMixin, VersionMixin):
 
     __table_args__ = (
         # 每个用户每个 key 只能有一条记录
-        {"postgresql_using": "btree"},
+        UniqueConstraint("user_id", "key", name="uq_user_settings_user_key"),
     )
 
     def __repr__(self) -> str:
