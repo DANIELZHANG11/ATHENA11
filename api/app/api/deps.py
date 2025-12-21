@@ -20,6 +20,21 @@ from app.core.exceptions import (
 from app.core.security import verify_token
 from app.models.user import User
 
+__all__ = [
+    "get_db_session",
+    "get_current_user",
+    "get_current_user_optional",
+    "get_current_active_user",
+    "get_current_admin_user",
+    "get_device_id",
+    "get_client_ip",
+    "CurrentUser",
+    "CurrentActiveUser",
+    "CurrentAdminUser",
+    "OptionalUser",
+    "DeviceId",
+]
+
 # Bearer Token 认证
 security = HTTPBearer(auto_error=False)
 

@@ -49,6 +49,42 @@
 
 ## 📝 AI 编码变更日志
 
+### 🔧 变更 #007 - 修复 CI Linter 错误
+| 属性 | 值 |
+|------|-----|
+| **日期时间** | 2025-12-21 16:30 |
+| **变更类型** | 代码质量优化 / Bug修复 |
+| **触发来源** | CI Linter Logs |
+| **影响模块** | Testing, CI |
+| **破坏性变更** | 否 |
+
+#### 📄 变更摘要
+修复 `tests/conftest.py` 中的 Ruff Linter 错误（未使用的导入、参数命名、导入排序）及 Mypy 类型错误；修复 `app/api/deps.py` 导出问题。
+
+#### 📁 修改文件清单
+
+| 文件路径 | 操作 | 变更说明 |
+|----------|------|----------|
+| `api/tests/conftest.py` | 修改 | 清理未使用的导入，规范化参数命名，优化导入排序，修复 Mypy 类型注解 |
+| `api/app/api/deps.py` | 修改 | 添加 `__all__` 明确导出 `get_db_session` 等依赖，修复 Mypy 导入错误 |
+| `CI验证规则及错误日志.md` | 修改 | 移除已修复的 CI 错误日志 |
+
+#### 🔗 关联变更
+- 数据库迁移：否
+- API 变更：否
+- 配置变更：否
+- 依赖变更：否
+
+#### ⚠️ 待人工确认
+- [ ] 确认 CI 流水线 (Ruff check & Mypy) 通过
+
+#### 🧪 待测试项
+- [x] `ruff check .` (All Passed)
+- [x] `mypy tests/conftest.py` (Passed)
+- [x] `pytest tests/test_auth.py` (All Passed)
+
+---
+
 ### 🔧 变更 #006 - CI 配置标准化与测试修复
 | 属性 | 值 |
 |------|-----|
