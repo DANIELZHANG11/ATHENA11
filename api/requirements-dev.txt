@@ -1,0 +1,20 @@
+# Athena API - 开发依赖
+# 使用 pip install -r requirements-dev.txt 安装
+
+-r requirements.txt
+
+# Testing
+pytest>=8.3.0
+pytest-asyncio>=0.24.0
+pytest-cov>=6.0.0
+testcontainers>=4.8.0
+
+# Linting & Formatting
+ruff>=0.8.0
+mypy>=1.13.0
+pre-commit>=4.0.0
+
+# Type Stubs
+types-redis>=4.6.0
+types-passlib>=1.7.0
+types-python-jose>=3.3.0

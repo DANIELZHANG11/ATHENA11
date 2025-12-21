@@ -1,0 +1,62 @@
+# Dockerfile for Athena OCR Worker
+#
+# 包含 OCRmyPDF 和 PaddleOCR 依赖
+
+# ==========================================================================
+# 构建阶段
+# ==========================================================================
+FROM python:3.11-slim as builder
+
+WORKDIR /build
+
+# 安装构建依赖
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 复制依赖文件
+COPY requirements.txt .
+COPY requirements-ocr.txt .
+
+# 创建虚拟环境并安装依赖
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -r requirements-ocr.txt
+
+# ==========================================================================
+# 运行阶段
+# ==========================================================================
+FROM python:3.11-slim as runtime
+
+WORKDIR /app
+
+# 安装 OCRmyPDF 和 Tesseract
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    curl \
+    ocrmypdf \
+    tesseract-ocr \
+    tesseract-ocr-chi-sim \
+    tesseract-ocr-chi-tra \
+    tesseract-ocr-eng \
+    ghostscript \
+    unpaper \
+    pngquant \
+    && rm -rf /var/lib/apt/lists/*
+
+# 从构建阶段复制虚拟环境
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# 创建非 root 用户
+RUN useradd --create-home --shell /bin/bash appuser
+USER appuser
+
+# 复制应用代码
+COPY --chown=appuser:appuser . .
+
+# 启动命令 (Celery Worker)
+CMD ["celery", "-A", "app.tasks.celery_app", "worker", "--loglevel=info", "-Q", "ocr", "--concurrency=2"]

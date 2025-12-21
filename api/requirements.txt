@@ -1,0 +1,45 @@
+# Athena API - 生产依赖
+# 使用 pip install -r requirements.txt 安装
+
+# Web Framework
+fastapi>=0.115.4
+uvicorn[standard]>=0.32.0
+python-multipart>=0.0.9
+
+# Database
+sqlalchemy[asyncio]>=2.0.36
+asyncpg>=0.30.0
+alembic>=1.14.0
+pgvector>=0.3.6
+
+# Cache & Queue
+redis>=5.2.0
+celery[redis]>=5.4.0
+
+# Auth
+pyjwt>=2.9.0
+passlib[bcrypt]>=1.7.4
+python-jose[cryptography]>=3.3.0
+
+# Object Storage
+boto3>=1.35.0
+minio>=7.2.0
+
+# Validation & Serialization
+pydantic>=2.10.0
+pydantic-settings>=2.6.0
+email-validator>=2.2.0
+
+# HTTP Client
+httpx>=0.28.0
+
+# Utilities
+python-dotenv>=1.0.1
+structlog>=24.4.0
+orjson>=3.10.0
+tenacity>=9.0.0
+
+# Book Processing
+ebooklib>=0.18
+PyPDF2>=3.0.0
+Pillow>=11.0.0

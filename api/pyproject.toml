@@ -1,0 +1,111 @@
+[project]
+name = "athena-api"
+version = "0.1.0"
+description = "雅典娜阅读器后端 API - App-First 架构"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Athena Team" }]
+keywords = ["reading", "ebooks", "api", "fastapi"]
+
+dependencies = [
+    # Web Framework
+    "fastapi>=0.115.4",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.9",
+    
+    # Database
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30.0",
+    "alembic>=1.14.0",
+    "pgvector>=0.3.6",
+    
+    # Cache & Queue
+    "redis>=5.2.0",
+    "celery[redis]>=5.4.0",
+    
+    # Auth
+    "pyjwt>=2.9.0",
+    "passlib[bcrypt]>=1.7.4",
+    "python-jose[cryptography]>=3.3.0",
+    
+    # Object Storage
+    "boto3>=1.35.0",
+    "minio>=7.2.0",
+    
+    # Validation & Serialization
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "email-validator>=2.2.0",
+    
+    # HTTP Client
+    "httpx>=0.28.0",
+    
+    # Utilities
+    "python-dotenv>=1.0.1",
+    "structlog>=24.4.0",
+    "orjson>=3.10.0",
+    "tenacity>=9.0.0",
+    
+    # Book Processing
+    "ebooklib>=0.18",
+    "PyPDF2>=3.0.0",
+    "Pillow>=11.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "httpx>=0.28.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "pre-commit>=4.0.0",
+    "testcontainers>=4.8.0",
+]
+
+ocr = [
+    "paddleocr>=2.7.0",
+    "paddlepaddle>=2.6.0",
+    "ocrmypdf>=16.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # Pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "ARG", # flake8-unused-arguments
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+    "B008",  # do not perform function calls in argument defaults
+]
+
+[tool.ruff.isort]
+known-first-party = ["app"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
