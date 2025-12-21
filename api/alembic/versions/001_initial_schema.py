@@ -365,7 +365,7 @@ def upgrade() -> None:
         sa.Column('book_id', postgresql.UUID(as_uuid=True), sa.ForeignKey('books.id', ondelete='CASCADE'), nullable=False),
         sa.Column('chunk_index', sa.Integer, nullable=False),
         sa.Column('content', sa.Text, nullable=False),
-        sa.Column('embedding', sa.Column('embedding', sa.LargeBinary, nullable=False)),  # vector(1536)
+        sa.Column('embedding', sa.LargeBinary, nullable=False),  # vector(1536)
         sa.Column('metadata', postgresql.JSONB, server_default='{}'),
         sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('NOW()')),
     )

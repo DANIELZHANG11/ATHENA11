@@ -5,6 +5,7 @@ PowerSync 集成模块
 """
 
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
 import jwt
 from fastapi import APIRouter, Request
@@ -73,8 +74,8 @@ def create_powersync_token(user_id: str, expires_delta: timedelta | None = None)
 
     return jwt.encode(
         payload,
-        settings.auth.jwt_secret_key,
-        algorithm=settings.auth.jwt_algorithm,
+        settings.auth.auth_secret,
+        algorithm=settings.auth.auth_algorithm,
     )
 
 
@@ -163,8 +164,8 @@ async def powersync_auth_endpoint(request: Request) -> JSONResponse:
     try:
         payload = jwt.decode(
             token,
-            settings.auth.jwt_secret_key,
-            algorithms=[settings.auth.jwt_algorithm],
+            settings.auth.auth_secret,
+            algorithms=[settings.auth.auth_algorithm],
         )
         user_id = payload.get("sub") or payload.get("user_id")
 
@@ -303,7 +304,7 @@ bucket_definitions:
 
 
 @router.get("/sync-rules")
-async def get_sync_rules() -> dict:
+async def get_sync_rules() -> dict[str, Any]:
     """
     获取 PowerSync 同步规则
 
