@@ -14,6 +14,9 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+from sqlalchemy.dialects.postgresql import JSONB, UUID, TSVECTOR
+from sqlalchemy.types import JSON, String
+from sqlalchemy.ext.compiler import compiles
 
 from app.core.database import get_db_session
 from app.main import app
@@ -27,13 +30,19 @@ TEST_DATABASE_URL = os.getenv(
     "sqlite+aiosqlite:///:memory:"  # 仅用于不需要数据库的测试
 )
 
+# SQLite 兼容性处理
+if "sqlite" in TEST_DATABASE_URL:
+    @compiles(JSONB, "sqlite")
+    def compile_jsonb_sqlite(type_, compiler, **kw):
+        return "JSON"
 
-@pytest.fixture(scope="session")
-def event_loop() -> Generator:
-    """创建事件循环"""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
+    @compiles(UUID, "sqlite")
+    def compile_uuid_sqlite(type_, compiler, **kw):
+        return "VARCHAR(36)"
+
+    @compiles(TSVECTOR, "sqlite")
+    def compile_tsvector_sqlite(type_, compiler, **kw):
+        return "TEXT"
 
 
 @pytest_asyncio.fixture(scope="session")

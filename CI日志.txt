@@ -9,1455 +9,185 @@ plugins: anyio-4.12.0, cov-7.0.0, asyncio-1.3.0
 asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
 collecting ... collected 10 items
 
-tests/test_auth.py::test_request_email_code_invalid_email ERROR          [ 10%]
-tests/test_auth.py::test_request_email_code_valid ERROR                  [ 20%]
-tests/test_auth.py::test_verify_email_code_invalid ERROR                 [ 30%]
-tests/test_auth.py::test_get_current_user_unauthorized ERROR             [ 40%]
-tests/test_auth.py::test_refresh_token_invalid ERROR                     [ 50%]
-tests/test_books.py::test_list_books_unauthorized ERROR                  [ 60%]
-tests/test_books.py::test_upload_init_unauthorized ERROR                 [ 70%]
-tests/test_books.py::test_get_book_not_found ERROR                       [ 80%]
-tests/test_health.py::test_health_check ERROR                            [ 90%]
-tests/test_health.py::test_root ERROR                                    [100%]
+tests/test_auth.py::test_request_email_code_invalid_email PASSED         [ 10%]
+tests/test_auth.py::test_request_email_code_valid FAILED                 [ 20%]
+tests/test_auth.py::test_verify_email_code_invalid FAILED                [ 30%]
+tests/test_auth.py::test_get_current_user_unauthorized PASSED            [ 40%]
+tests/test_auth.py::test_refresh_token_invalid PASSED                    [ 50%]
+tests/test_books.py::test_list_books_unauthorized PASSED                 [ 60%]
+tests/test_books.py::test_upload_init_unauthorized PASSED                [ 70%]
+tests/test_books.py::test_get_book_not_found PASSED                      [ 80%]
+tests/test_health.py::test_health_check PASSED                           [ 90%]
+tests/test_health.py::test_root PASSED                                   [100%]
 
-==================================== ERRORS ====================================
-___________ ERROR at setup of test_request_email_code_invalid_email ____________
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:550: in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:177: in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:268: in __bind_execute
-    data, status, _ = await self.__do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:257: in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-asyncpg/protocol/protocol.pyx:205: in bind_execute
-    ???
-E   asyncpg.exceptions.ObjectNotInPrerequisiteStateError: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: in setup
-    return super().setup()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:743: in pytest_fixture_setup
-    hook_result = yield
-                  ^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
-    result = runner.run(setup(), context=context)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:309: in setup
-    res = await gen_obj.__anext__()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/conftest.py:56: in test_engine
-    await conn.run_sync(Base.metadata.create_all)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py:888: in run_sync
-    return await greenlet_spawn(
+=================================== FAILURES ===================================
+________________________ test_request_email_code_valid _________________________
+tests/test_auth.py:27: in test_request_email_code_valid
+    assert response.status_code in [200, 503]
+E   assert 404 in [200, 503]
+E    +  where 404 = <Response [404 Not Found]>.status_code
+________________________ test_verify_email_code_invalid ________________________
+tests/test_auth.py:33: in test_verify_email_code_invalid
+    response = await client.post(
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/httpx/_client.py:1859: in post
+    return await self.request(
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/httpx/_client.py:1540: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/httpx/_client.py:1629: in send
+    response = await self._send_handling_auth(
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/httpx/_client.py:1657: in _send_handling_auth
+    response = await self._send_handling_redirects(
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/httpx/_client.py:1694: in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/httpx/_client.py:1730: in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/httpx/_transports/asgi.py:170: in handle_async_request
+    await self.app(scope, receive, send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/fastapi/applications.py:1135: in __call__
+    await super().__call__(scope, receive, send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/applications.py:107: in __call__
+    await self.middleware_stack(scope, receive, send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/middleware/cors.py:85: in __call__
+    await self.app(scope, receive, send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/routing.py:716: in __call__
+    await self.middleware_stack(scope, receive, send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/routing.py:736: in app
+    await route.handle(scope, receive, send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/routing.py:290: in handle
+    await self.app(scope, receive, send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/fastapi/routing.py:117: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/fastapi/routing.py:103: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/fastapi/routing.py:424: in app
+    raw_response = await run_endpoint_function(
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/fastapi/routing.py:310: in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/api/routes/auth.py:67: in verify_email_code
+    user, access_token, refresh_token = await service.verify_email_code(
+app/services/auth_service.py:139: in verify_email_code
+    user = await self._get_or_create_user(email, invite_code)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/services/auth_service.py:218: in _get_or_create_user
+    result = await self.db.execute(select(User).where(User.email == email))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/session.py:449: in execute
+    result = await greenlet_spawn(
 /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:201: in greenlet_spawn
     result = context.throw(*sys.exc_info())
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/schema.py:5928: in create_all
-    bind._run_ddl_visitor(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2467: in _run_ddl_visitor
-    ).traverse_single(element)
-      ^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:984: in visit_metadata
-    self.traverse_single(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:1022: in visit_table
-    )._invoke_with(self.connection)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:321: in _invoke_with
-    return bind.execute(self)
-           ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1419: in execute
-    return meth(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:187: in _execute_on_connection
-    return connection._execute_ddl(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1530: in _execute_ddl
-    ret = self._execute_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
-    return self._exec_single_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
-    self._handle_dbapi_exception(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2363: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-E   [SQL: 
-E   CREATE TABLE user_settings (
-E   	id UUID NOT NULL, 
-E   	user_id UUID NOT NULL, 
-E   	key VARCHAR(50) NOT NULL, 
-E   	value JSONB NOT NULL, 
-E   	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	version INTEGER NOT NULL, 
-E   	PRIMARY KEY (id), 
-E   	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-E   )
-E    USING btree
-E   
-E   ]
-E   (Background on this error at: https://sqlalche.me/e/20/dbapi)
-_______________ ERROR at setup of test_request_email_code_valid ________________
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:550: in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:177: in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:268: in __bind_execute
-    data, status, _ = await self.__do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:257: in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-asyncpg/protocol/protocol.pyx:205: in bind_execute
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/orm/session.py:2351: in execute
+    return self._execute_internal(
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/orm/session.py:2239: in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/orm/session.py:2108: in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<string>:2: in _connection_for_bind
     ???
-E   asyncpg.exceptions.ObjectNotInPrerequisiteStateError: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/orm/state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/orm/session.py:1187: in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:3285: in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:143: in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:3309: in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/pool/base.py:447: in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/pool/base.py:1363: in _checkout
+    with util.safe_reraise():
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py:224: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/pool/base.py:1301: in _checkout
+    result = pool._dialect._do_ping_w_event(
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:729: in _do_ping_w_event
+    return self.do_ping(dbapi_connection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:1160: in do_ping
+    dbapi_connection.ping()
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:818: in ping
+    self._handle_exception(error)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:799: in _handle_exception
+    raise error
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:816: in ping
+    _ = self.await_(self._async_ping())
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
     value = await result
             ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: in setup
-    return super().setup()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
-    result = runner.run(setup(), context=context)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:309: in setup
-    res = await gen_obj.__anext__()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/conftest.py:56: in test_engine
-    await conn.run_sync(Base.metadata.create_all)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py:888: in run_sync
-    return await greenlet_spawn(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:201: in greenlet_spawn
-    result = context.throw(*sys.exc_info())
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/schema.py:5928: in create_all
-    bind._run_ddl_visitor(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2467: in _run_ddl_visitor
-    ).traverse_single(element)
-      ^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:984: in visit_metadata
-    self.traverse_single(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:1022: in visit_table
-    )._invoke_with(self.connection)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:321: in _invoke_with
-    return bind.execute(self)
-           ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1419: in execute
-    return meth(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:187: in _execute_on_connection
-    return connection._execute_ddl(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1530: in _execute_ddl
-    ret = self._execute_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
-    return self._exec_single_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
-    self._handle_dbapi_exception(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2363: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-E   [SQL: 
-E   CREATE TABLE user_settings (
-E   	id UUID NOT NULL, 
-E   	user_id UUID NOT NULL, 
-E   	key VARCHAR(50) NOT NULL, 
-E   	value JSONB NOT NULL, 
-E   	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	version INTEGER NOT NULL, 
-E   	PRIMARY KEY (id), 
-E   	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-E   )
-E    USING btree
-E   
-E   ]
-E   (Background on this error at: https://sqlalche.me/e/20/dbapi)
-_______________ ERROR at setup of test_verify_email_code_invalid _______________
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:550: in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:177: in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:268: in __bind_execute
-    data, status, _ = await self.__do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:257: in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-asyncpg/protocol/protocol.pyx:205: in bind_execute
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:825: in _async_ping
+    await tr.start()
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/transaction.py:146: in start
+    await self._connection.execute(query)
+/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/connection.py:354: in execute
+    result = await self._protocol.query(query, timeout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+asyncpg/protocol/protocol.pyx:369: in query
     ???
-E   asyncpg.exceptions.ObjectNotInPrerequisiteStateError: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
+E   RuntimeError: Task <Task pending name='Task-23' coro=<test_verify_email_code_invalid() running at /home/runner/work/ATHENA11/ATHENA11/api/tests/test_auth.py:33> cb=[_run_until_complete_cb() at /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:181]> got Future <Future pending cb=[BaseProtocol._on_waiter_completed()]> attached to a different loop
+------------------------------ Captured log call -------------------------------
+ERROR    sqlalchemy.pool.impl.AsyncAdaptedQueuePool:base.py:376 Exception terminating connection <AdaptedConnection <asyncpg.connection.Connection object at 0x7fbfbd894f40>>
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 372, in _close_connection
+    self._dialect.do_terminate(connection)
+  File "/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 1127, in do_terminate
+    dbapi_connection.terminate()
+  File "/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/connectors/asyncio.py", line 402, in terminate
+    self.await_(asyncio.shield(self._terminate_graceful_close()))  # type: ignore[attr-defined] # noqa: E501
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
+  File "/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
     value = await result
             ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: in setup
-    return super().setup()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
-    result = runner.run(setup(), context=context)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:309: in setup
-    res = await gen_obj.__anext__()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/conftest.py:56: in test_engine
-    await conn.run_sync(Base.metadata.create_all)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py:888: in run_sync
-    return await greenlet_spawn(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:201: in greenlet_spawn
-    result = context.throw(*sys.exc_info())
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/schema.py:5928: in create_all
-    bind._run_ddl_visitor(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2467: in _run_ddl_visitor
-    ).traverse_single(element)
-      ^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:984: in visit_metadata
-    self.traverse_single(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:1022: in visit_table
-    )._invoke_with(self.connection)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:321: in _invoke_with
-    return bind.execute(self)
-           ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1419: in execute
-    return meth(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:187: in _execute_on_connection
-    return connection._execute_ddl(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1530: in _execute_ddl
-    ret = self._execute_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
-    return self._exec_single_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
-    self._handle_dbapi_exception(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2363: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-E   [SQL: 
-E   CREATE TABLE user_settings (
-E   	id UUID NOT NULL, 
-E   	user_id UUID NOT NULL, 
-E   	key VARCHAR(50) NOT NULL, 
-E   	value JSONB NOT NULL, 
-E   	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	version INTEGER NOT NULL, 
-E   	PRIMARY KEY (id), 
-E   	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-E   )
-E    USING btree
-E   
-E   ]
-E   (Background on this error at: https://sqlalche.me/e/20/dbapi)
-_____________ ERROR at setup of test_get_current_user_unauthorized _____________
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:550: in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:177: in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:268: in __bind_execute
-    data, status, _ = await self.__do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:257: in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-asyncpg/protocol/protocol.pyx:205: in bind_execute
-    ???
-E   asyncpg.exceptions.ObjectNotInPrerequisiteStateError: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: in setup
-    return super().setup()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
-    result = runner.run(setup(), context=context)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:309: in setup
-    res = await gen_obj.__anext__()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/conftest.py:56: in test_engine
-    await conn.run_sync(Base.metadata.create_all)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py:888: in run_sync
-    return await greenlet_spawn(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:201: in greenlet_spawn
-    result = context.throw(*sys.exc_info())
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/schema.py:5928: in create_all
-    bind._run_ddl_visitor(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2467: in _run_ddl_visitor
-    ).traverse_single(element)
-      ^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:984: in visit_metadata
-    self.traverse_single(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:1022: in visit_table
-    )._invoke_with(self.connection)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:321: in _invoke_with
-    return bind.execute(self)
-           ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1419: in execute
-    return meth(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:187: in _execute_on_connection
-    return connection._execute_ddl(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1530: in _execute_ddl
-    ret = self._execute_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
-    return self._exec_single_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
-    self._handle_dbapi_exception(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2363: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-E   [SQL: 
-E   CREATE TABLE user_settings (
-E   	id UUID NOT NULL, 
-E   	user_id UUID NOT NULL, 
-E   	key VARCHAR(50) NOT NULL, 
-E   	value JSONB NOT NULL, 
-E   	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	version INTEGER NOT NULL, 
-E   	PRIMARY KEY (id), 
-E   	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-E   )
-E    USING btree
-E   
-E   ]
-E   (Background on this error at: https://sqlalche.me/e/20/dbapi)
-_________________ ERROR at setup of test_refresh_token_invalid _________________
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:550: in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:177: in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:268: in __bind_execute
-    data, status, _ = await self.__do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:257: in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-asyncpg/protocol/protocol.pyx:205: in bind_execute
-    ???
-E   asyncpg.exceptions.ObjectNotInPrerequisiteStateError: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: in setup
-    return super().setup()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
-    result = runner.run(setup(), context=context)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:309: in setup
-    res = await gen_obj.__anext__()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/conftest.py:56: in test_engine
-    await conn.run_sync(Base.metadata.create_all)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py:888: in run_sync
-    return await greenlet_spawn(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:201: in greenlet_spawn
-    result = context.throw(*sys.exc_info())
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/schema.py:5928: in create_all
-    bind._run_ddl_visitor(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2467: in _run_ddl_visitor
-    ).traverse_single(element)
-      ^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:984: in visit_metadata
-    self.traverse_single(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:1022: in visit_table
-    )._invoke_with(self.connection)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:321: in _invoke_with
-    return bind.execute(self)
-           ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1419: in execute
-    return meth(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:187: in _execute_on_connection
-    return connection._execute_ddl(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1530: in _execute_ddl
-    ret = self._execute_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
-    return self._exec_single_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
-    self._handle_dbapi_exception(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2363: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-E   [SQL: 
-E   CREATE TABLE user_settings (
-E   	id UUID NOT NULL, 
-E   	user_id UUID NOT NULL, 
-E   	key VARCHAR(50) NOT NULL, 
-E   	value JSONB NOT NULL, 
-E   	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	version INTEGER NOT NULL, 
-E   	PRIMARY KEY (id), 
-E   	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-E   )
-E    USING btree
-E   
-E   ]
-E   (Background on this error at: https://sqlalche.me/e/20/dbapi)
-________________ ERROR at setup of test_list_books_unauthorized ________________
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:550: in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:177: in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:268: in __bind_execute
-    data, status, _ = await self.__do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:257: in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-asyncpg/protocol/protocol.pyx:205: in bind_execute
-    ???
-E   asyncpg.exceptions.ObjectNotInPrerequisiteStateError: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: in setup
-    return super().setup()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
-    result = runner.run(setup(), context=context)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:309: in setup
-    res = await gen_obj.__anext__()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/conftest.py:56: in test_engine
-    await conn.run_sync(Base.metadata.create_all)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py:888: in run_sync
-    return await greenlet_spawn(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:201: in greenlet_spawn
-    result = context.throw(*sys.exc_info())
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/schema.py:5928: in create_all
-    bind._run_ddl_visitor(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2467: in _run_ddl_visitor
-    ).traverse_single(element)
-      ^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:984: in visit_metadata
-    self.traverse_single(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:1022: in visit_table
-    )._invoke_with(self.connection)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:321: in _invoke_with
-    return bind.execute(self)
-           ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1419: in execute
-    return meth(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:187: in _execute_on_connection
-    return connection._execute_ddl(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1530: in _execute_ddl
-    ret = self._execute_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
-    return self._exec_single_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
-    self._handle_dbapi_exception(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2363: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-E   [SQL: 
-E   CREATE TABLE user_settings (
-E   	id UUID NOT NULL, 
-E   	user_id UUID NOT NULL, 
-E   	key VARCHAR(50) NOT NULL, 
-E   	value JSONB NOT NULL, 
-E   	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	version INTEGER NOT NULL, 
-E   	PRIMARY KEY (id), 
-E   	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-E   )
-E    USING btree
-E   
-E   ]
-E   (Background on this error at: https://sqlalche.me/e/20/dbapi)
-_______________ ERROR at setup of test_upload_init_unauthorized ________________
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:550: in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:177: in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:268: in __bind_execute
-    data, status, _ = await self.__do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:257: in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-asyncpg/protocol/protocol.pyx:205: in bind_execute
-    ???
-E   asyncpg.exceptions.ObjectNotInPrerequisiteStateError: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: in setup
-    return super().setup()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
-    result = runner.run(setup(), context=context)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:309: in setup
-    res = await gen_obj.__anext__()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/conftest.py:56: in test_engine
-    await conn.run_sync(Base.metadata.create_all)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py:888: in run_sync
-    return await greenlet_spawn(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:201: in greenlet_spawn
-    result = context.throw(*sys.exc_info())
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/schema.py:5928: in create_all
-    bind._run_ddl_visitor(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2467: in _run_ddl_visitor
-    ).traverse_single(element)
-      ^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:984: in visit_metadata
-    self.traverse_single(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:1022: in visit_table
-    )._invoke_with(self.connection)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:321: in _invoke_with
-    return bind.execute(self)
-           ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1419: in execute
-    return meth(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:187: in _execute_on_connection
-    return connection._execute_ddl(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1530: in _execute_ddl
-    ret = self._execute_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
-    return self._exec_single_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
-    self._handle_dbapi_exception(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2363: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-E   [SQL: 
-E   CREATE TABLE user_settings (
-E   	id UUID NOT NULL, 
-E   	user_id UUID NOT NULL, 
-E   	key VARCHAR(50) NOT NULL, 
-E   	value JSONB NOT NULL, 
-E   	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	version INTEGER NOT NULL, 
-E   	PRIMARY KEY (id), 
-E   	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-E   )
-E    USING btree
-E   
-E   ]
-E   (Background on this error at: https://sqlalche.me/e/20/dbapi)
-__________________ ERROR at setup of test_get_book_not_found ___________________
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:550: in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:177: in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:268: in __bind_execute
-    data, status, _ = await self.__do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:257: in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-asyncpg/protocol/protocol.pyx:205: in bind_execute
-    ???
-E   asyncpg.exceptions.ObjectNotInPrerequisiteStateError: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: in setup
-    return super().setup()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
-    result = runner.run(setup(), context=context)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:309: in setup
-    res = await gen_obj.__anext__()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/conftest.py:56: in test_engine
-    await conn.run_sync(Base.metadata.create_all)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py:888: in run_sync
-    return await greenlet_spawn(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:201: in greenlet_spawn
-    result = context.throw(*sys.exc_info())
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/schema.py:5928: in create_all
-    bind._run_ddl_visitor(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2467: in _run_ddl_visitor
-    ).traverse_single(element)
-      ^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:984: in visit_metadata
-    self.traverse_single(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:1022: in visit_table
-    )._invoke_with(self.connection)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:321: in _invoke_with
-    return bind.execute(self)
-           ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1419: in execute
-    return meth(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:187: in _execute_on_connection
-    return connection._execute_ddl(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1530: in _execute_ddl
-    ret = self._execute_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
-    return self._exec_single_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
-    self._handle_dbapi_exception(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2363: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-E   [SQL: 
-E   CREATE TABLE user_settings (
-E   	id UUID NOT NULL, 
-E   	user_id UUID NOT NULL, 
-E   	key VARCHAR(50) NOT NULL, 
-E   	value JSONB NOT NULL, 
-E   	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	version INTEGER NOT NULL, 
-E   	PRIMARY KEY (id), 
-E   	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-E   )
-E    USING btree
-E   
-E   ]
-E   (Background on this error at: https://sqlalche.me/e/20/dbapi)
-_____________________ ERROR at setup of test_health_check ______________________
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:550: in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:177: in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:268: in __bind_execute
-    data, status, _ = await self.__do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:257: in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-asyncpg/protocol/protocol.pyx:205: in bind_execute
-    ???
-E   asyncpg.exceptions.ObjectNotInPrerequisiteStateError: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: in setup
-    return super().setup()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
-    result = runner.run(setup(), context=context)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:309: in setup
-    res = await gen_obj.__anext__()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/conftest.py:56: in test_engine
-    await conn.run_sync(Base.metadata.create_all)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py:888: in run_sync
-    return await greenlet_spawn(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:201: in greenlet_spawn
-    result = context.throw(*sys.exc_info())
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/schema.py:5928: in create_all
-    bind._run_ddl_visitor(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2467: in _run_ddl_visitor
-    ).traverse_single(element)
-      ^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:984: in visit_metadata
-    self.traverse_single(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:1022: in visit_table
-    )._invoke_with(self.connection)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:321: in _invoke_with
-    return bind.execute(self)
-           ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1419: in execute
-    return meth(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:187: in _execute_on_connection
-    return connection._execute_ddl(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1530: in _execute_ddl
-    ret = self._execute_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
-    return self._exec_single_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
-    self._handle_dbapi_exception(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2363: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-E   [SQL: 
-E   CREATE TABLE user_settings (
-E   	id UUID NOT NULL, 
-E   	user_id UUID NOT NULL, 
-E   	key VARCHAR(50) NOT NULL, 
-E   	value JSONB NOT NULL, 
-E   	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	version INTEGER NOT NULL, 
-E   	PRIMARY KEY (id), 
-E   	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-E   )
-E    USING btree
-E   
-E   ]
-E   (Background on this error at: https://sqlalche.me/e/20/dbapi)
-_________________________ ERROR at setup of test_root __________________________
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:550: in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:177: in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:268: in __bind_execute
-    data, status, _ = await self.__do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/prepared_stmt.py:257: in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-asyncpg/protocol/protocol.pyx:205: in bind_execute
-    ???
-E   asyncpg.exceptions.ObjectNotInPrerequisiteStateError: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-
-The above exception was the direct cause of the following exception:
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: in setup
-    return super().setup()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:313: in _asyncgen_fixture_wrapper
-    result = runner.run(setup(), context=context)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/pytest_asyncio/plugin.py:309: in setup
-    res = await gen_obj.__anext__()
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/conftest.py:56: in test_engine
-    await conn.run_sync(Base.metadata.create_all)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py:888: in run_sync
-    return await greenlet_spawn(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:201: in greenlet_spawn
-    result = context.throw(*sys.exc_info())
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/schema.py:5928: in create_all
-    bind._run_ddl_visitor(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2467: in _run_ddl_visitor
-    ).traverse_single(element)
-      ^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:984: in visit_metadata
-    self.traverse_single(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/visitors.py:661: in traverse_single
-    return meth(obj, **kw)
-           ^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:1022: in visit_table
-    )._invoke_with(self.connection)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:321: in _invoke_with
-    return bind.execute(self)
-           ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1419: in execute
-    return meth(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/sql/ddl.py:187: in _execute_on_connection
-    return connection._execute_ddl(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1530: in _execute_ddl
-    ret = self._execute_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
-    return self._exec_single_context(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
-    self._handle_dbapi_exception(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:2363: in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
-    self.dialect.do_execute(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/engine/default.py:952: in do_execute
-    cursor.execute(statement, parameters)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:585: in execute
-    self._adapt_connection.await_(
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:132: in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/util/_concurrency_py3k.py:196: in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:563: in _prepare_and_execute
-    self._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:513: in _handle_exception
-    self._adapt_connection._handle_exception(error)
-/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:797: in _handle_exception
-    raise translated_error from error
-E   sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-E   [SQL: 
-E   CREATE TABLE user_settings (
-E   	id UUID NOT NULL, 
-E   	user_id UUID NOT NULL, 
-E   	key VARCHAR(50) NOT NULL, 
-E   	value JSONB NOT NULL, 
-E   	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-E   	version INTEGER NOT NULL, 
-E   	PRIMARY KEY (id), 
-E   	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-E   )
-E    USING btree
-E   
-E   ]
-E   (Background on this error at: https://sqlalche.me/e/20/dbapi)
+  File "/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 912, in _terminate_graceful_close
+    await self._connection.close(timeout=2)
+  File "/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/asyncpg/connection.py", line 1513, in close
+    await self._protocol.close(timeout)
+  File "asyncpg/protocol/protocol.pyx", line 618, in close
+RuntimeError: Task <Task pending name='Task-24' coro=<AsyncAdapt_asyncpg_connection._terminate_graceful_close() running at /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py:912> cb=[shield.<locals>._inner_done_callback() at /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/tasks.py:891]> got Future <Future pending> attached to a different loop
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.11.14-final-0 _______________
 
 Coverage XML written to file coverage.xml
 =========================== short test summary info ============================
-ERROR tests/test_auth.py::test_request_email_code_invalid_email - sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-[SQL: 
-CREATE TABLE user_settings (
-	id UUID NOT NULL, 
-	user_id UUID NOT NULL, 
-	key VARCHAR(50) NOT NULL, 
-	value JSONB NOT NULL, 
-	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	version INTEGER NOT NULL, 
-	PRIMARY KEY (id), 
-	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-)
- USING btree
-
-]
-(Background on this error at: https://sqlalche.me/e/20/dbapi)
-ERROR tests/test_auth.py::test_request_email_code_valid - sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-[SQL: 
-CREATE TABLE user_settings (
-	id UUID NOT NULL, 
-	user_id UUID NOT NULL, 
-	key VARCHAR(50) NOT NULL, 
-	value JSONB NOT NULL, 
-	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	version INTEGER NOT NULL, 
-	PRIMARY KEY (id), 
-	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-)
- USING btree
-
-]
-(Background on this error at: https://sqlalche.me/e/20/dbapi)
-ERROR tests/test_auth.py::test_verify_email_code_invalid - sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-[SQL: 
-CREATE TABLE user_settings (
-	id UUID NOT NULL, 
-	user_id UUID NOT NULL, 
-	key VARCHAR(50) NOT NULL, 
-	value JSONB NOT NULL, 
-	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	version INTEGER NOT NULL, 
-	PRIMARY KEY (id), 
-	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-)
- USING btree
-
-]
-(Background on this error at: https://sqlalche.me/e/20/dbapi)
-ERROR tests/test_auth.py::test_get_current_user_unauthorized - sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-[SQL: 
-CREATE TABLE user_settings (
-	id UUID NOT NULL, 
-	user_id UUID NOT NULL, 
-	key VARCHAR(50) NOT NULL, 
-	value JSONB NOT NULL, 
-	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	version INTEGER NOT NULL, 
-	PRIMARY KEY (id), 
-	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-)
- USING btree
-
-]
-(Background on this error at: https://sqlalche.me/e/20/dbapi)
-ERROR tests/test_auth.py::test_refresh_token_invalid - sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-[SQL: 
-CREATE TABLE user_settings (
-	id UUID NOT NULL, 
-	user_id UUID NOT NULL, 
-	key VARCHAR(50) NOT NULL, 
-	value JSONB NOT NULL, 
-	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	version INTEGER NOT NULL, 
-	PRIMARY KEY (id), 
-	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-)
- USING btree
-
-]
-(Background on this error at: https://sqlalche.me/e/20/dbapi)
-ERROR tests/test_books.py::test_list_books_unauthorized - sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-[SQL: 
-CREATE TABLE user_settings (
-	id UUID NOT NULL, 
-	user_id UUID NOT NULL, 
-	key VARCHAR(50) NOT NULL, 
-	value JSONB NOT NULL, 
-	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	version INTEGER NOT NULL, 
-	PRIMARY KEY (id), 
-	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-)
- USING btree
-
-]
-(Background on this error at: https://sqlalche.me/e/20/dbapi)
-ERROR tests/test_books.py::test_upload_init_unauthorized - sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-[SQL: 
-CREATE TABLE user_settings (
-	id UUID NOT NULL, 
-	user_id UUID NOT NULL, 
-	key VARCHAR(50) NOT NULL, 
-	value JSONB NOT NULL, 
-	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	version INTEGER NOT NULL, 
-	PRIMARY KEY (id), 
-	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-)
- USING btree
-
-]
-(Background on this error at: https://sqlalche.me/e/20/dbapi)
-ERROR tests/test_books.py::test_get_book_not_found - sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-[SQL: 
-CREATE TABLE user_settings (
-	id UUID NOT NULL, 
-	user_id UUID NOT NULL, 
-	key VARCHAR(50) NOT NULL, 
-	value JSONB NOT NULL, 
-	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	version INTEGER NOT NULL, 
-	PRIMARY KEY (id), 
-	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-)
- USING btree
-
-]
-(Background on this error at: https://sqlalche.me/e/20/dbapi)
-ERROR tests/test_health.py::test_health_check - sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-[SQL: 
-CREATE TABLE user_settings (
-	id UUID NOT NULL, 
-	user_id UUID NOT NULL, 
-	key VARCHAR(50) NOT NULL, 
-	value JSONB NOT NULL, 
-	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	version INTEGER NOT NULL, 
-	PRIMARY KEY (id), 
-	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-)
- USING btree
-
-]
-(Background on this error at: https://sqlalche.me/e/20/dbapi)
-ERROR tests/test_health.py::test_root - sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ObjectNotInPrerequisiteStateError'>: access method "btree" is not of type TABLE
-[SQL: 
-CREATE TABLE user_settings (
-	id UUID NOT NULL, 
-	user_id UUID NOT NULL, 
-	key VARCHAR(50) NOT NULL, 
-	value JSONB NOT NULL, 
-	created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
-	version INTEGER NOT NULL, 
-	PRIMARY KEY (id), 
-	FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE CASCADE
-)
- USING btree
-
-]
-(Background on this error at: https://sqlalche.me/e/20/dbapi)
-============================== 10 errors in 8.05s ==============================
+FAILED tests/test_auth.py::test_request_email_code_valid - assert 404 in [200, 503]
+ +  where 404 = <Response [404 Not Found]>.status_code
+FAILED tests/test_auth.py::test_verify_email_code_invalid - RuntimeError: Task <Task pending name='Task-23' coro=<test_verify_email_code_invalid() running at /home/runner/work/ATHENA11/ATHENA11/api/tests/test_auth.py:33> cb=[_run_until_complete_cb() at /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:181]> got Future <Future pending cb=[BaseProtocol._on_waiter_completed()]> attached to a different loop
+========================= 2 failed, 8 passed in 1.83s ==========================
 Error: Process completed with exit code 1.

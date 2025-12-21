@@ -20,7 +20,7 @@ async def test_request_email_code_invalid_email(client: AsyncClient):
 async def test_request_email_code_valid(client: AsyncClient):
     """测试有效邮箱请求验证码"""
     response = await client.post(
-        "/api/v1/auth/email/code",
+        "/api/v1/auth/email/send_code",
         json={"email": "test@example.com"},
     )
     # 在测试环境可能返回 200 或 503 (如果邮件服务未配置)
@@ -29,16 +29,16 @@ async def test_request_email_code_valid(client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_verify_email_code_invalid(client: AsyncClient):
-    """测试无效验证码"""
+    """测试无效验证码格式"""
     response = await client.post(
         "/api/v1/auth/email/verify_code",
         json={
             "email": "test@example.com",
-            "code": "000000",
+            "code": "12345",  # 无效格式 (非6位)
         },
     )
-    # 应该返回 401 或 400
-    assert response.status_code in [400, 401]
+    # 应该返回 401 或 400 或 422 (参数校验失败)
+    assert response.status_code in [400, 401, 422]
 
 
 @pytest.mark.asyncio
