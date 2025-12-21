@@ -10,7 +10,7 @@ from httpx import AsyncClient
 async def test_request_email_code_invalid_email(client: AsyncClient):
     """测试无效邮箱请求验证码"""
     response = await client.post(
-        "/api/v1/auth/email/code",
+        "/api/v1/auth/email/send_code",
         json={"email": "invalid-email"},
     )
     assert response.status_code == 422  # Validation error
@@ -31,7 +31,7 @@ async def test_request_email_code_valid(client: AsyncClient):
 async def test_verify_email_code_invalid(client: AsyncClient):
     """测试无效验证码"""
     response = await client.post(
-        "/api/v1/auth/email/verify",
+        "/api/v1/auth/email/verify_code",
         json={
             "email": "test@example.com",
             "code": "000000",
