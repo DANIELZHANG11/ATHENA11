@@ -8,7 +8,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -161,8 +161,8 @@ class UserOAuthAccount(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     user: Mapped["User"] = relationship("User", back_populates="oauth_accounts")
 
     __table_args__ = (
-        # 每个第三方账号只能绑定一个用户
-        {"postgresql_using": "btree"},
+        # 每个提供商的用户 ID 只能绑定一个雅典娜用户
+        Index("idx_oauth_provider_user", "provider", "provider_user_id", unique=True),
     )
 
     def __repr__(self) -> str:
