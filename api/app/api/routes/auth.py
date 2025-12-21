@@ -7,7 +7,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
-from sqlalchemy import select, update
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import CurrentUser, DeviceId, get_client_ip, get_db_session
@@ -143,7 +143,7 @@ async def get_current_user_info(
 async def logout(
     current_user: CurrentUser,
     device_id: DeviceId,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> dict[str, str]:
     """
     登出当前会话
@@ -151,7 +151,8 @@ async def logout(
     撤销当前设备的会话。
     """
     if device_id:
-        from sqlalchemy import select, update
+        from sqlalchemy import update
+
         from app.models.user import UserSession
 
         await db.execute(
@@ -159,7 +160,7 @@ async def logout(
             .where(
                 UserSession.user_id == current_user.id,
                 UserSession.device_id == device_id,
-                UserSession.revoked == False,
+                UserSession.revoked.is_(False),
             )
             .values(revoked=True)
         )
@@ -221,3 +222,5 @@ async def revoke_session(
     await service.revoke_session(session_id, str(current_user.id))
 
     return {"message": "session_revoked"}
+
+

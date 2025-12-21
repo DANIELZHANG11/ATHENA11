@@ -5,20 +5,96 @@
 错误码参考: 12 - 错误码中心化参考
 """
 
-from typing import Any
+from enum import Enum
 
 from fastapi import HTTPException, status
 
 
+class ErrorCode(str, Enum):
+    """错误码枚举"""
+
+    # 认证相关
+    UNAUTHORIZED = "unauthorized"
+    TOKEN_EXPIRED = "token_expired"
+    TOKEN_INVALID = "token_invalid"
+    AUTH_CODE_INVALID = "auth_code_invalid"
+    AUTH_CODE_RATE_LIMITED = "auth_code_rate_limited"
+
+    # 资源相关
+    NOT_FOUND = "not_found"
+    BOOK_NOT_FOUND = "book_not_found"
+    FILE_NOT_FOUND = "file_not_found"
+
+    # 权限相关
+    FORBIDDEN = "forbidden"
+    READONLY_MODE = "readonly_mode"
+
+    # 配额相关
+    QUOTA_EXCEEDED = "quota_exceeded"
+    BOOK_LIMIT_REACHED = "book_limit_reached"
+
+    # 付费相关
+    INSUFFICIENT_CREDITS = "insufficient_credits"
+    PAYMENT_FAILED = "payment_failed"
+
+    # 外部服务
+    EXTERNAL_SERVICE_ERROR = "external_service_error"
+
+    # 通用
+    INTERNAL_ERROR = "internal_error"
+    RATE_LIMITED = "rate_limited"
+    VALIDATION_ERROR = "validation_error"
+
+
+# 错误码到 HTTP 状态码的映射
+ERROR_STATUS_MAP: dict[ErrorCode, int] = {
+    ErrorCode.UNAUTHORIZED: status.HTTP_401_UNAUTHORIZED,
+    ErrorCode.TOKEN_EXPIRED: status.HTTP_401_UNAUTHORIZED,
+    ErrorCode.TOKEN_INVALID: status.HTTP_401_UNAUTHORIZED,
+    ErrorCode.AUTH_CODE_INVALID: status.HTTP_400_BAD_REQUEST,
+    ErrorCode.AUTH_CODE_RATE_LIMITED: status.HTTP_429_TOO_MANY_REQUESTS,
+    ErrorCode.NOT_FOUND: status.HTTP_404_NOT_FOUND,
+    ErrorCode.BOOK_NOT_FOUND: status.HTTP_404_NOT_FOUND,
+    ErrorCode.FILE_NOT_FOUND: status.HTTP_404_NOT_FOUND,
+    ErrorCode.FORBIDDEN: status.HTTP_403_FORBIDDEN,
+    ErrorCode.READONLY_MODE: status.HTTP_403_FORBIDDEN,
+    ErrorCode.QUOTA_EXCEEDED: status.HTTP_403_FORBIDDEN,
+    ErrorCode.BOOK_LIMIT_REACHED: status.HTTP_403_FORBIDDEN,
+    ErrorCode.INSUFFICIENT_CREDITS: status.HTTP_402_PAYMENT_REQUIRED,
+    ErrorCode.PAYMENT_FAILED: status.HTTP_402_PAYMENT_REQUIRED,
+    ErrorCode.EXTERNAL_SERVICE_ERROR: status.HTTP_502_BAD_GATEWAY,
+    ErrorCode.INTERNAL_ERROR: status.HTTP_500_INTERNAL_SERVER_ERROR,
+    ErrorCode.RATE_LIMITED: status.HTTP_429_TOO_MANY_REQUESTS,
+    ErrorCode.VALIDATION_ERROR: status.HTTP_400_BAD_REQUEST,
+}
+
+
 class AthenaException(HTTPException):
-    """雅典娜基础异常"""
+    """雅典娜基础异常
+
+    支持两种调用方式:
+    1. AthenaException(status_code=400, detail="error")
+    2. AthenaException(code=ErrorCode.NOT_FOUND, message="custom message")
+    """
 
     def __init__(
         self,
-        status_code: int,
-        detail: str,
+        status_code: int | None = None,
+        detail: str | None = None,
+        code: ErrorCode | None = None,
+        message: str | None = None,
         headers: dict[str, str] | None = None,
     ) -> None:
+        # 支持新的 code/message 风格
+        if code is not None:
+            status_code = ERROR_STATUS_MAP.get(code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            detail = message or code.value
+
+        if status_code is None:
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        if detail is None:
+            detail = "internal_error"
+
         super().__init__(status_code=status_code, detail=detail, headers=headers)
 
 

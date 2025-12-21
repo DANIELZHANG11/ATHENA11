@@ -5,7 +5,6 @@ OCR 任务
 使用 OCRmyPDF + PaddleOCR 生成双层 PDF。
 """
 
-import os
 import subprocess
 import tempfile
 from pathlib import Path
@@ -27,9 +26,9 @@ logger = structlog.get_logger()
     autoretry_for=(Exception,),
 )
 def process_ocr(
-    self,
+    self,  # noqa: ARG001
     book_id: str,
-    user_id: str,
+    user_id: str,  # noqa: ARG001
     minio_key: str,
     sha256: str,
 ) -> dict:
@@ -188,6 +187,7 @@ def _update_book_status(book_id: str, status: str, error: str | None = None) -> 
     """更新书籍处理状态"""
     # 使用同步数据库连接（Celery 任务中）
     from sqlalchemy import create_engine, text
+
     from app.core.config import settings
 
     # 创建同步引擎
@@ -211,6 +211,7 @@ def _update_book_status(book_id: str, status: str, error: str | None = None) -> 
 def _update_book_ocr_complete(book_id: str, ocr_pdf_key: str) -> None:
     """更新书籍 OCR 完成状态"""
     from sqlalchemy import create_engine, text
+
     from app.core.config import settings
 
     sync_url = settings.database.sync_database_url

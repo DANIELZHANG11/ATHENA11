@@ -4,7 +4,7 @@ PowerSync 集成模块
 提供 PowerSync Service 认证端点和同步规则。
 """
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import jwt
 from fastapi import APIRouter, Request
@@ -13,7 +13,6 @@ from pydantic import BaseModel
 
 from app.api.deps import CurrentUser
 from app.core.config import settings
-
 
 router = APIRouter(prefix="/powersync", tags=["PowerSync"])
 
@@ -59,7 +58,7 @@ def create_powersync_token(user_id: str, expires_delta: timedelta | None = None)
     if expires_delta is None:
         expires_delta = timedelta(hours=24)
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     expire = now + expires_delta
 
     # PowerSync 标准 claims
@@ -101,7 +100,7 @@ async def get_powersync_credentials(
         expires_delta=expires_delta,
     )
 
-    expires_at = datetime.now(timezone.utc) + expires_delta
+    expires_at = datetime.now(UTC) + expires_delta
     return PowerSyncCredentials(
         endpoint=settings.powersync.powersync_url,
         token=token,
@@ -124,7 +123,7 @@ async def refresh_powersync_token(
         expires_delta=expires_delta,
     )
 
-    expires_at = datetime.now(timezone.utc) + expires_delta
+    expires_at = datetime.now(UTC) + expires_delta
 
     return PowerSyncCredentials(
         endpoint=settings.powersync.powersync_url,
@@ -314,3 +313,5 @@ async def get_sync_rules() -> dict:
         "info": "This endpoint is for development reference only",
         "rules": SYNC_RULES,
     }
+
+

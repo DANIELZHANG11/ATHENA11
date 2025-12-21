@@ -5,16 +5,13 @@
 """
 
 import uuid
-from datetime import datetime
-from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import (
-    DateTime,
     ForeignKey,
+    Index,
     Integer,
     String,
     Text,
-    Index,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -50,7 +47,7 @@ class VectorDocument(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     # 文档内容
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    
+
     # 位置信息
     chunk_index: Mapped[int] = mapped_column(Integer, nullable=False)
     chapter: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -69,7 +66,7 @@ class VectorDocument(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         Index("idx_vectors_book", "book_id"),
         Index("idx_vectors_user_book", "user_id", "book_id"),
         # HNSW 索引需要在迁移中单独创建:
-        # CREATE INDEX idx_vectors_embedding_hnsw ON vectors 
+        # CREATE INDEX idx_vectors_embedding_hnsw ON vectors
         # USING hnsw (embedding vector_cosine_ops) WITH (m = 16, ef_construction = 64);
     )
 

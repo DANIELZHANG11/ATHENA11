@@ -11,10 +11,10 @@ from typing import Any
 from sqlalchemy import (
     Boolean,
     DateTime,
+    Index,
     Integer,
     String,
     Text,
-    Index,
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -29,13 +29,13 @@ class SystemSetting(Base, TimestampMixin):
 
     # 配置键
     key: Mapped[str] = mapped_column(String(100), primary_key=True)
-    
+
     # 配置值
     value: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
-    
+
     # 描述
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    
+
     # 是否可被 API 修改
     is_readonly: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
@@ -54,14 +54,14 @@ class FeatureFlag(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     # 开关状态
     is_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    
+
     # 灰度发布
     rollout_percentage: Mapped[int] = mapped_column(Integer, default=100, nullable=False)  # 0-100
-    
+
     # 白名单/黑名单
     whitelist_user_ids: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
     blacklist_user_ids: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
-    
+
     # 条件
     conditions: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
     # 例: {"membership_tier": ["PRO", "ENTERPRISE"], "app_version": ">=2.0.0"}
@@ -78,13 +78,13 @@ class Translation(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     # 翻译键
     key: Mapped[str] = mapped_column(String(200), nullable=False, index=True)
     namespace: Mapped[str] = mapped_column(String(50), default="common", nullable=False)
-    
+
     # 语言
     language: Mapped[str] = mapped_column(String(10), nullable=False)  # zh-CN/en-US
-    
+
     # 翻译值
     value: Mapped[str] = mapped_column(Text, nullable=False)
-    
+
     # 来源
     source: Mapped[str] = mapped_column(String(20), default="tolgee", nullable=False)  # tolgee/manual
 

@@ -4,12 +4,12 @@
 处理笔记、高亮、书签、书架的业务逻辑。
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
 import structlog
-from sqlalchemy import delete, func, select, update
+from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import AthenaException, ErrorCode
@@ -130,7 +130,7 @@ class NoteService:
         if color is not None:
             note.color = color
 
-        note.updated_at = datetime.now(timezone.utc)
+        note.updated_at = datetime.now(UTC)
 
         await self.db.commit()
         await self.db.refresh(note)
@@ -140,7 +140,7 @@ class NoteService:
     async def delete_note(self, note_id: str, user_id: str) -> None:
         """软删除笔记"""
         note = await self.get_note(note_id, user_id)
-        note.deleted_at = datetime.now(timezone.utc)
+        note.deleted_at = datetime.now(UTC)
 
         await self.db.commit()
         logger.info("Note deleted", note_id=note_id)
@@ -222,7 +222,7 @@ class NoteService:
         if color is not None:
             highlight.color = color
 
-        highlight.updated_at = datetime.now(timezone.utc)
+        highlight.updated_at = datetime.now(UTC)
 
         await self.db.commit()
         await self.db.refresh(highlight)
@@ -232,7 +232,7 @@ class NoteService:
     async def delete_highlight(self, highlight_id: str, user_id: str) -> None:
         """软删除高亮"""
         highlight = await self.get_highlight(highlight_id, user_id)
-        highlight.deleted_at = datetime.now(timezone.utc)
+        highlight.deleted_at = datetime.now(UTC)
 
         await self.db.commit()
 
@@ -302,7 +302,7 @@ class NoteService:
     async def delete_bookmark(self, bookmark_id: str, user_id: str) -> None:
         """软删除书签"""
         bookmark = await self.get_bookmark(bookmark_id, user_id)
-        bookmark.deleted_at = datetime.now(timezone.utc)
+        bookmark.deleted_at = datetime.now(UTC)
 
         await self.db.commit()
 
@@ -393,7 +393,7 @@ class NoteService:
         if sort_order is not None:
             shelf.sort_order = sort_order
 
-        shelf.updated_at = datetime.now(timezone.utc)
+        shelf.updated_at = datetime.now(UTC)
 
         await self.db.commit()
         await self.db.refresh(shelf)
@@ -403,7 +403,7 @@ class NoteService:
     async def delete_shelf(self, shelf_id: str, user_id: str) -> None:
         """软删除书架"""
         shelf = await self.get_shelf(shelf_id, user_id)
-        shelf.deleted_at = datetime.now(timezone.utc)
+        shelf.deleted_at = datetime.now(UTC)
 
         # 同时删除书架-书籍关联
         await self.db.execute(

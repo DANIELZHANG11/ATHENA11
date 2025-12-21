@@ -9,16 +9,16 @@ from datetime import date, datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     Date,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
     Text,
-    BigInteger,
-    Index,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -27,7 +27,6 @@ from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 
 if TYPE_CHECKING:
     from app.models.book import Book
-    from app.models.user import User
 
 
 class BookPosition(Base, TimestampMixin):
@@ -97,10 +96,10 @@ class ReadingTimeLog(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     # 会话状态
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    
+
     # 阅读时长 (毫秒)
     duration_ms: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
-    
+
     # 最后活跃时间
     last_active_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

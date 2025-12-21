@@ -5,7 +5,8 @@ Pytest 配置和 fixtures。
 """
 
 import asyncio
-from typing import AsyncGenerator, Generator
+import os
+from collections.abc import AsyncGenerator, Generator
 
 import pytest
 import pytest_asyncio
@@ -14,14 +15,17 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.core.config import settings
 from app.core.database import get_db_session
 from app.main import app
 from app.models.base import Base
 
-
-# 测试数据库 URL (使用 SQLite 内存数据库)
-TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+# 使用环境变量中的数据库 URL，如果不存在则使用 SQLite (仅用于简单的导入测试)
+# 注意: SQLite 不支持 PostgreSQL 特有类型 (如 JSONB, UUID 等)
+# CI 环境应始终设置 DATABASE_URL 指向 PostgreSQL
+TEST_DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "sqlite+aiosqlite:///:memory:"  # 仅用于不需要数据库的测试
+)
 
 
 @pytest.fixture(scope="session")
@@ -35,11 +39,18 @@ def event_loop() -> Generator:
 @pytest_asyncio.fixture(scope="session")
 async def test_engine():
     """创建测试数据库引擎"""
-    engine = create_async_engine(
-        TEST_DATABASE_URL,
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
+    # 根据数据库类型设置不同的连接参数
+    if "sqlite" in TEST_DATABASE_URL:
+        engine = create_async_engine(
+            TEST_DATABASE_URL,
+            connect_args={"check_same_thread": False},
+            poolclass=StaticPool,
+        )
+    else:
+        engine = create_async_engine(
+            TEST_DATABASE_URL,
+            pool_pre_ping=True,
+        )
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)

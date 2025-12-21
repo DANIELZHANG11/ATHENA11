@@ -1,16 +1,17 @@
 """Initial schema
 
 Revision ID: 001
-Revises: 
+Revises:
 Create Date: 2024-01-01 00:00:00.000000
 
 创建所有初始表结构。
 """
-from typing import Sequence
+from collections.abc import Sequence
 
-from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = '001'
@@ -371,13 +372,13 @@ def upgrade() -> None:
     op.create_index('ix_document_vectors_book_id', 'document_vectors', ['book_id'])
     # 向量索引需要单独创建
     op.execute('''
-        ALTER TABLE document_vectors 
-        ALTER COLUMN embedding TYPE vector(1536) 
+        ALTER TABLE document_vectors
+        ALTER COLUMN embedding TYPE vector(1536)
         USING embedding::vector(1536)
     ''')
     op.execute('''
-        CREATE INDEX ix_document_vectors_embedding 
-        ON document_vectors 
+        CREATE INDEX ix_document_vectors_embedding
+        ON document_vectors
         USING ivfflat (embedding vector_cosine_ops)
         WITH (lists = 100)
     ''')
@@ -413,12 +414,12 @@ def upgrade() -> None:
     # 创建 RLS 策略
     # ==========================================================================
     # 启用 RLS
-    tables_with_rls = ['books', 'book_position', 'reading_time_log', 'notes', 
+    tables_with_rls = ['books', 'book_position', 'reading_time_log', 'notes',
                        'highlights', 'bookmarks', 'shelves', 'shelf_books', 'user_settings']
-    
+
     for table in tables_with_rls:
         op.execute(f'ALTER TABLE {table} ENABLE ROW LEVEL SECURITY')
-        
+
         if table == 'shelf_books':
             # shelf_books 通过 shelf 关联到用户
             op.execute(f'''
@@ -426,8 +427,8 @@ def upgrade() -> None:
                 FOR ALL
                 USING (
                     EXISTS (
-                        SELECT 1 FROM shelves 
-                        WHERE shelves.id = {table}.shelf_id 
+                        SELECT 1 FROM shelves
+                        WHERE shelves.id = {table}.shelf_id
                         AND shelves.user_id = current_user_id()
                     )
                 )
@@ -443,10 +444,10 @@ def upgrade() -> None:
     # 创建触发器
     # ==========================================================================
     # updated_at 触发器
-    tables_with_updated_at = ['users', 'books', 'notes', 'highlights', 'shelves', 
-                              'user_settings', 'ai_sessions', 'billing_subscriptions', 
+    tables_with_updated_at = ['users', 'books', 'notes', 'highlights', 'shelves',
+                              'user_settings', 'ai_sessions', 'billing_subscriptions',
                               'billing_quotas', 'system_config']
-    
+
     for table in tables_with_updated_at:
         op.execute(f'''
             CREATE TRIGGER update_{table}_updated_at
@@ -488,7 +489,7 @@ def upgrade() -> None:
 def downgrade() -> None:
     # 删除发布
     op.execute('DROP PUBLICATION IF EXISTS athena_publication')
-    
+
     # 删除所有表（按依赖顺序）
     tables = [
         'system_audit_log', 'system_config',
@@ -501,10 +502,10 @@ def downgrade() -> None:
         'reading_time_log', 'book_position', 'books',
         'user_sessions', 'users',
     ]
-    
+
     for table in tables:
         op.drop_table(table)
-    
+
     # 删除函数
     op.execute('DROP FUNCTION IF EXISTS current_user_id()')
     op.execute('DROP FUNCTION IF EXISTS set_current_user_id(UUID)')

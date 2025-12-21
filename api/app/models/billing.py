@@ -9,23 +9,23 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
     Text,
-    BigInteger,
-    Index,
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 
 if TYPE_CHECKING:
-    from app.models.user import User
+    pass
 
 
 class CreditAccount(Base, TimestampMixin):
@@ -41,7 +41,7 @@ class CreditAccount(Base, TimestampMixin):
 
     # Credits 余额
     balance: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
-    
+
     # 钱包余额 (真实货币)
     wallet_amount: Mapped[float] = mapped_column(Numeric(12, 2), default=0, nullable=False)
     wallet_currency: Mapped[str] = mapped_column(String(3), default="CNY", nullable=False)
@@ -81,11 +81,11 @@ class CreditLedger(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     # 交易描述
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    
+
     # 关联信息
     reference_type: Mapped[str | None] = mapped_column(String(30), nullable=True)  # ai_message/ocr_job
     reference_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
-    
+
     # 元数据
     meta: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
 
@@ -105,15 +105,15 @@ class CreditProduct(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     # 商品信息
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    
+
     # 积分数量
     credits: Mapped[int] = mapped_column(Integer, nullable=False)
     bonus_credits: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    
+
     # 价格
     price: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
     currency: Mapped[str] = mapped_column(String(3), default="CNY", nullable=False)
-    
+
     # Stripe 产品 ID
     stripe_price_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
@@ -145,7 +145,7 @@ class PaymentSession(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     # 商品信息
     product_type: Mapped[str] = mapped_column(String(30), nullable=False)  # credits/subscription
     product_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
-    
+
     # 金额
     amount: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
     currency: Mapped[str] = mapped_column(String(3), nullable=False)
@@ -156,11 +156,11 @@ class PaymentSession(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         default="pending",
         nullable=False,
     )  # pending/processing/completed/failed/cancelled/refunded
-    
+
     # 时间戳
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     expired_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    
+
     # 元数据
     meta: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
 
@@ -181,10 +181,10 @@ class PaymentWebhookEvent(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     gateway: Mapped[str] = mapped_column(String(20), nullable=False)
     event_id: Mapped[str] = mapped_column(String(200), nullable=False, index=True)
     event_type: Mapped[str] = mapped_column(String(100), nullable=False)
-    
+
     # 原始数据
     payload: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
-    
+
     # 处理状态
     processed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     processed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
@@ -206,12 +206,12 @@ class PricingRule(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     # 规则标识
     service_type: Mapped[str] = mapped_column(String(30), nullable=False)  # ai_chat/ocr/translate
     name: Mapped[str] = mapped_column(String(100), nullable=False)
-    
+
     # 定价参数
     unit: Mapped[str] = mapped_column(String(20), nullable=False)  # token/page/character
     credits_per_unit: Mapped[float] = mapped_column(Numeric(10, 4), nullable=False)
     min_credits: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
-    
+
     # 会员折扣
     free_tier_limit: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     pro_discount: Mapped[float] = mapped_column(Numeric(3, 2), default=1.0, nullable=False)  # 0.8 = 8折

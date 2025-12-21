@@ -34,7 +34,7 @@ target_metadata = Base.metadata
 def run_migrations_offline() -> None:
     """
     离线模式运行迁移
-    
+
     仅生成 SQL 脚本，不连接数据库。
     """
     url = config.get_main_option("sqlalchemy.url")
@@ -79,7 +79,7 @@ async def run_async_migrations() -> None:
 def run_migrations_online() -> None:
     """
     在线模式运行迁移
-    
+
     连接数据库并执行迁移。
     """
     asyncio.run(run_async_migrations())

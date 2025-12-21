@@ -9,15 +9,15 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
     Text,
-    BigInteger,
-    Index,
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -25,9 +25,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin, VersionMixin
 
 if TYPE_CHECKING:
-    from app.models.user import User
-    from app.models.note import Note, Highlight, Bookmark
+    from app.models.note import Bookmark, Highlight, Note
     from app.models.reading import BookPosition, ReadingTimeLog
+    from app.models.user import User
 
 
 class Book(Base, UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin, VersionMixin):

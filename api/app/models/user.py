@@ -8,15 +8,14 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, Numeric, String, Text, func
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin, VersionMixin
+from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin, VersionMixin
 
 if TYPE_CHECKING:
     from app.models.book import Book
-    from app.models.reading import BookPosition, ReadingTimeLog
 
 
 class User(Base, UUIDPrimaryKeyMixin, TimestampMixin, VersionMixin):
@@ -105,7 +104,7 @@ class UserSession(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         nullable=False,
         index=True,
     )
-    
+
     # 设备信息
     device_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     device_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
@@ -183,7 +182,7 @@ class UserStats(Base, TimestampMixin):
 
     # 邀请统计
     invite_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    
+
     # 额外配额 (通过邀请获得)
     extra_storage_quota: Mapped[int] = mapped_column(Integer, default=0, nullable=False)  # 单位: MB
     extra_book_quota: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
@@ -219,7 +218,7 @@ class Invite(Base, UUIDPrimaryKeyMixin, TimestampMixin):
 
     # 邀请码快照
     code_used: Mapped[str] = mapped_column(String(20), nullable=False)
-    
+
     # 状态
     status: Mapped[str] = mapped_column(
         String(20),

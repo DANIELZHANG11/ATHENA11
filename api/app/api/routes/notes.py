@@ -7,7 +7,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import CurrentUser, get_db
+from app.api.deps import CurrentUser, get_db_session
 from app.api.schemas.note import (
     BookmarkCreate,
     BookmarkListResponse,
@@ -36,7 +36,7 @@ router = APIRouter(tags=["笔记与标注"])
 async def create_note(
     request: NoteCreate,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> NoteResponse:
     """创建笔记"""
     service = NoteService(db)
@@ -54,7 +54,7 @@ async def create_note(
 @router.get("/notes", response_model=NoteListResponse)
 async def list_notes(
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
     book_id: str | None = Query(None, description="按书籍筛选"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
@@ -80,7 +80,7 @@ async def list_notes(
 async def get_note(
     note_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> NoteResponse:
     """获取笔记详情"""
     service = NoteService(db)
@@ -93,7 +93,7 @@ async def update_note(
     note_id: str,
     request: NoteUpdate,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> NoteResponse:
     """更新笔记"""
     service = NoteService(db)
@@ -111,7 +111,7 @@ async def update_note(
 async def delete_note(
     note_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> DeleteResponse:
     """删除笔记"""
     service = NoteService(db)
@@ -128,7 +128,7 @@ async def delete_note(
 async def create_highlight(
     request: HighlightCreate,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> HighlightResponse:
     """创建高亮"""
     service = NoteService(db)
@@ -146,7 +146,7 @@ async def create_highlight(
 async def list_book_highlights(
     book_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> HighlightListResponse:
     """获取书籍的所有高亮"""
     service = NoteService(db)
@@ -165,7 +165,7 @@ async def update_highlight(
     highlight_id: str,
     request: HighlightUpdate,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> HighlightResponse:
     """更新高亮"""
     service = NoteService(db)
@@ -181,7 +181,7 @@ async def update_highlight(
 async def delete_highlight(
     highlight_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> DeleteResponse:
     """删除高亮"""
     service = NoteService(db)
@@ -198,7 +198,7 @@ async def delete_highlight(
 async def create_bookmark(
     request: BookmarkCreate,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> BookmarkResponse:
     """创建书签"""
     service = NoteService(db)
@@ -215,7 +215,7 @@ async def create_bookmark(
 async def list_book_bookmarks(
     book_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> BookmarkListResponse:
     """获取书籍的所有书签"""
     service = NoteService(db)
@@ -233,7 +233,7 @@ async def list_book_bookmarks(
 async def delete_bookmark(
     bookmark_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> DeleteResponse:
     """删除书签"""
     service = NoteService(db)
@@ -280,3 +280,5 @@ def _bookmark_to_response(bookmark) -> BookmarkResponse:
         title=bookmark.title,
         created_at=bookmark.created_at,
     )
+
+

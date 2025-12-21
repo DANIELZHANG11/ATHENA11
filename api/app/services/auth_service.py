@@ -5,7 +5,7 @@
 """
 
 import secrets
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 
 import redis.asyncio as redis
 from sqlalchemy import select
@@ -15,7 +15,6 @@ from app.core.config import settings
 from app.core.exceptions import (
     AuthCodeInvalidException,
     AuthCodeRateLimitedException,
-    EmailAlreadyRegisteredException,
     TokenInvalidException,
 )
 from app.core.security import (
@@ -140,7 +139,7 @@ class AuthService:
         user = await self._get_or_create_user(email, invite_code)
 
         # 创建会话
-        session = await self._create_session(
+        await self._create_session(
             user=user,
             device_id=device_id,
             device_name=device_name,
@@ -172,7 +171,7 @@ class AuthService:
 
         # 验证用户存在且活跃
         result = await self.db.execute(
-            select(User).where(User.id == payload.sub, User.is_active == True)
+            select(User).where(User.id == payload.sub, User.is_active)
         )
         user = result.scalar_one_or_none()
         if user is None:
@@ -199,7 +198,7 @@ class AuthService:
             select(UserSession).where(
                 UserSession.id == session_id,
                 UserSession.user_id == user_id,
-                UserSession.revoked == False,
+                not UserSession.revoked,
             )
         )
         session = result.scalar_one_or_none()

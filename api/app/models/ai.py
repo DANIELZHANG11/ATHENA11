@@ -6,18 +6,17 @@ AI 对话相关模型
 
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     Boolean,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
     Text,
-    BigInteger,
-    Index,
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -25,8 +24,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 
 if TYPE_CHECKING:
-    from app.models.book import Book
-    from app.models.user import User
+    pass
 
 
 class AiModel(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -87,7 +85,7 @@ class AiConversation(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     # 会话信息
     title: Mapped[str | None] = mapped_column(Text, nullable=True)
     summary: Mapped[str | None] = mapped_column(Text, nullable=True)
-    
+
     # 会话类型
     conversation_type: Mapped[str] = mapped_column(
         String(20),

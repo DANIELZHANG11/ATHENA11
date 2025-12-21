@@ -66,13 +66,13 @@ async_session_factory = async_sessionmaker(
 )
 
 
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
+async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
     """
     FastAPI 依赖注入：获取数据库会话
 
     用法:
         @router.get("/users")
-        async def get_users(db: AsyncSession = Depends(get_db)):
+        async def get_users(db: AsyncSession = Depends(get_db_session)):
             ...
     """
     async with async_session_factory() as session:
@@ -80,6 +80,10 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             yield session
         finally:
             await session.close()
+
+
+# 别名保持向后兼容
+get_db = get_db_session
 
 
 @asynccontextmanager

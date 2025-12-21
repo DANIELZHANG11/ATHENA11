@@ -4,13 +4,13 @@
 FastAPI 应用入口，配置中间件、路由和生命周期事件。
 """
 
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
+import structlog
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-import structlog
 
 from app.core.config import settings
 from app.core.database import close_db, init_db

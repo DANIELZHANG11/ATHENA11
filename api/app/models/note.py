@@ -9,22 +9,20 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import (
-    Boolean,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     String,
     Text,
-    Index,
 )
-from sqlalchemy.dialects.postgresql import UUID, TSVECTOR
+from sqlalchemy.dialects.postgresql import TSVECTOR, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin, VersionMixin
 
 if TYPE_CHECKING:
     from app.models.book import Book
-    from app.models.user import User
 
 
 class Note(Base, UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin, VersionMixin):
@@ -47,7 +45,7 @@ class Note(Base, UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin, VersionMi
 
     # 笔记内容
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    
+
     # 位置信息
     chapter: Mapped[str | None] = mapped_column(Text, nullable=True)
     location: Mapped[str | None] = mapped_column(Text, nullable=True)  # CFI 或页码
@@ -107,13 +105,13 @@ class Highlight(Base, UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin, Vers
     # 高亮范围
     start_location: Mapped[str] = mapped_column(Text, nullable=False)
     end_location: Mapped[str] = mapped_column(Text, nullable=False)
-    
+
     # 高亮内容 (选中的文本)
     text: Mapped[str | None] = mapped_column(Text, nullable=True)
-    
+
     # 样式
     color: Mapped[str | None] = mapped_column(String(20), nullable=True)  # yellow/green/blue/pink/purple
-    
+
     # 附加评论
     comment: Mapped[str | None] = mapped_column(Text, nullable=True)
 
@@ -171,7 +169,7 @@ class Bookmark(Base, UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin, Versi
     # 位置信息
     location: Mapped[str] = mapped_column(Text, nullable=False)  # CFI 或页码
     page: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    
+
     # 可选标题
     title: Mapped[str | None] = mapped_column(Text, nullable=True)
 

@@ -4,7 +4,6 @@
 MinIO S3 对象存储操作封装。
 """
 
-import hashlib
 import uuid
 from datetime import timedelta
 from typing import BinaryIO
@@ -41,7 +40,7 @@ class StorageService:
     def generate_presigned_upload_url(
         self,
         filename: str,
-        content_type: str,
+        content_type: str,  # noqa: ARG002
         user_id: str,
         expires: timedelta = timedelta(hours=1),
     ) -> tuple[str, str]:

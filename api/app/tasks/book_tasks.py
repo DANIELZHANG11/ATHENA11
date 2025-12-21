@@ -95,7 +95,7 @@ def process_book_upload(
     except Exception as e:
         logger.exception("Book processing failed", book_id=book_id)
         _update_book_status(book_id, "failed", str(e))
-        raise self.retry(exc=e)
+        raise self.retry(exc=e) from e
 
 
 def _process_pdf(book_id: str, input_path: Path, storage: StorageService) -> dict:
@@ -156,7 +156,7 @@ def _process_ebook(
     book_id: str,
     input_path: Path,
     storage: StorageService,
-    format: str,
+    format: str,  # noqa: ARG001
 ) -> dict:
     """
     处理电子书文件 (EPUB, MOBI)
@@ -164,7 +164,6 @@ def _process_ebook(
     提取元数据和封面。
     """
     try:
-        import ebooklib
         from ebooklib import epub
 
         book = epub.read_epub(str(input_path))
@@ -236,6 +235,8 @@ def _extract_cover(book_id: str, doc, storage: StorageService) -> str | None:
     将第一页渲染为 JPEG 图像。
     """
     try:
+        import fitz
+
         if doc.page_count == 0:
             return None
 
@@ -267,7 +268,7 @@ def _extract_epub_cover(book_id: str, book, storage: StorageService) -> str | No
     从 EPUB 提取封面
     """
     try:
-        from ebooklib import epub
+        import ebooklib
 
         # 尝试获取封面
         for item in book.get_items():
@@ -295,6 +296,7 @@ def _extract_epub_cover(book_id: str, book, storage: StorageService) -> str | No
 def _update_book_status(book_id: str, status: str, error: str | None = None) -> None:
     """更新书籍处理状态"""
     from sqlalchemy import create_engine, text
+
     from app.core.config import settings
 
     sync_url = settings.database.sync_database_url
@@ -317,6 +319,7 @@ def _update_book_status(book_id: str, status: str, error: str | None = None) -> 
 def _update_book_processing_complete(book_id: str, meta: dict) -> None:
     """更新书籍处理完成状态"""
     from sqlalchemy import create_engine, text
+
     from app.core.config import settings
 
     sync_url = settings.database.sync_database_url
@@ -342,6 +345,7 @@ def _update_book_processing_complete(book_id: str, meta: dict) -> None:
 def _update_book_cover(book_id: str, cover_key: str) -> None:
     """更新书籍封面"""
     from sqlalchemy import create_engine, text
+
     from app.core.config import settings
 
     sync_url = settings.database.sync_database_url

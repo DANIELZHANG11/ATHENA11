@@ -7,7 +7,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import CurrentUser, get_db
+from app.api.deps import CurrentUser, get_db_session
 from app.api.schemas.note import (
     DeleteResponse,
     ShelfBookAdd,
@@ -26,7 +26,7 @@ router = APIRouter(prefix="/shelves", tags=["书架"])
 async def create_shelf(
     request: ShelfCreate,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> ShelfResponse:
     """创建书架"""
     service = NoteService(db)
@@ -43,7 +43,7 @@ async def create_shelf(
 @router.get("", response_model=ShelfListResponse)
 async def list_shelves(
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> ShelfListResponse:
     """获取书架列表"""
     service = NoteService(db)
@@ -58,7 +58,7 @@ async def list_shelves(
 async def get_shelf(
     shelf_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> ShelfResponse:
     """获取书架详情"""
     service = NoteService(db)
@@ -71,7 +71,7 @@ async def update_shelf(
     shelf_id: str,
     request: ShelfUpdate,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> ShelfResponse:
     """更新书架"""
     service = NoteService(db)
@@ -90,7 +90,7 @@ async def update_shelf(
 async def delete_shelf(
     shelf_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> DeleteResponse:
     """删除书架"""
     service = NoteService(db)
@@ -103,7 +103,7 @@ async def add_books_to_shelf(
     shelf_id: str,
     request: ShelfBookAdd,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> dict:
     """添加书籍到书架"""
     service = NoteService(db)
@@ -120,7 +120,7 @@ async def remove_books_from_shelf(
     shelf_id: str,
     request: ShelfBookRemove,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> dict:
     """从书架移除书籍"""
     service = NoteService(db)
@@ -143,3 +143,5 @@ def _shelf_to_response(shelf) -> ShelfResponse:
         created_at=shelf.created_at,
         updated_at=shelf.updated_at,
     )
+
+

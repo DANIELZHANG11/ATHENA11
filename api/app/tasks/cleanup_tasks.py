@@ -4,7 +4,6 @@
 处理软删除书籍的自动清理、孤立文件清理等。
 """
 
-from datetime import datetime, timedelta, timezone
 
 import structlog
 from celery import shared_task

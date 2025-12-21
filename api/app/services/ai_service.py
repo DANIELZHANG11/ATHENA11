@@ -5,8 +5,7 @@ AI 服务
 """
 
 import json
-from datetime import datetime, timezone
-from typing import Any, AsyncGenerator
+from collections.abc import AsyncGenerator
 from uuid import UUID
 
 import httpx
@@ -16,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.exceptions import AthenaException, ErrorCode
-from app.models import AIMessage, AISession, Book, DocumentVector
+from app.models import AIMessage, AISession
 
 logger = structlog.get_logger()
 
@@ -154,8 +153,8 @@ class AIService:
         # 更新会话时间
         await self.db.execute(
             text("""
-                UPDATE ai_sessions 
-                SET updated_at = NOW() 
+                UPDATE ai_sessions
+                SET updated_at = NOW()
                 WHERE id = :session_id::uuid
             """),
             {"session_id": session_id},
@@ -174,7 +173,7 @@ class AIService:
         message: str,
         session_id: str | None = None,
         book_id: str | None = None,
-        stream: bool = False,
+        stream: bool = False,  # noqa: ARG002
     ) -> dict:
         """
         发送聊天消息
@@ -192,7 +191,7 @@ class AIService:
             )
 
         # 保存用户消息
-        user_message = await self.add_message(
+        await self.add_message(
             session_id=str(session.id),
             role="user",
             content=message,
@@ -361,7 +360,7 @@ class AIService:
 
         # 构建查询
         sql = """
-            SELECT 
+            SELECT
                 dv.book_id,
                 b.title as book_title,
                 dv.chunk_index,
@@ -460,13 +459,13 @@ class AIService:
                 raise AthenaException(
                     code=ErrorCode.EXTERNAL_SERVICE_ERROR,
                     message="AI service error",
-                )
+                ) from e
             except Exception as e:
                 logger.exception("AI API call failed")
                 raise AthenaException(
                     code=ErrorCode.EXTERNAL_SERVICE_ERROR,
                     message="AI service unavailable",
-                )
+                ) from e
 
     async def _call_ai_api_stream(
         self,
@@ -503,7 +502,7 @@ class AIService:
                             except json.JSONDecodeError:
                                 continue
 
-            except Exception as e:
+            except Exception:
                 logger.exception("AI API stream failed")
                 raise
 

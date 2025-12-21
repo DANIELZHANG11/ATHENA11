@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import CurrentUser, get_db
+from app.api.deps import CurrentUser, get_db_session
 from app.api.schemas.ai import (
     AIChatRequest,
     AIChatResponse,
@@ -36,7 +36,7 @@ router = APIRouter(prefix="/ai", tags=["AI 助手"])
 async def create_session(
     request: AISessionCreate,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> AISessionResponse:
     """创建 AI 会话"""
     service = AIService(db)
@@ -52,7 +52,7 @@ async def create_session(
 @router.get("/sessions", response_model=AISessionListResponse)
 async def list_sessions(
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
     book_id: str | None = Query(None, description="按书籍筛选"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
@@ -78,7 +78,7 @@ async def list_sessions(
 async def get_session(
     session_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> AISessionResponse:
     """获取 AI 会话详情"""
     service = AIService(db)
@@ -90,7 +90,7 @@ async def get_session(
 async def delete_session(
     session_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> DeleteResponse:
     """删除 AI 会话"""
     service = AIService(db)
@@ -107,7 +107,7 @@ async def delete_session(
 async def get_session_messages(
     session_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> AIMessageListResponse:
     """获取会话的所有消息"""
     service = AIService(db)
@@ -130,7 +130,7 @@ async def get_session_messages(
 async def chat(
     request: AIChatRequest,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ):
     """
     发送聊天消息
@@ -176,7 +176,7 @@ async def chat(
 async def vector_search(
     request: VectorSearchRequest,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> VectorSearchResponse:
     """
     语义搜索
@@ -234,3 +234,5 @@ def _message_to_response(message) -> AIMessageResponse:
         tokens_used=message.tokens_used,
         created_at=message.created_at,
     )
+
+

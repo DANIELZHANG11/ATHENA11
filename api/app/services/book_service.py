@@ -4,11 +4,10 @@
 处理书籍上传、管理、删除等业务逻辑。
 """
 
-import uuid
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from sqlalchemy import and_, func, or_, select, update
+from sqlalchemy import func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -16,7 +15,6 @@ from app.core.exceptions import (
     BookLimitReachedException,
     BookNotFoundException,
     CanonicalNotFoundException,
-    QuotaExceededException,
     UploadForbiddenQuotaExceededException,
 )
 from app.models.book import Book, ShelfBook

@@ -9,7 +9,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import CurrentUser, get_db
+from app.api.deps import CurrentUser, get_db_session
 from app.api.schemas.book import (
     BookContentResponse,
     BookCoverResponse,
@@ -17,7 +17,6 @@ from app.api.schemas.book import (
     BookListResponse,
     BookMetaResponse,
     BookResponse,
-    BookUpdateRequest,
     DedupReferenceRequest,
     UploadCompleteRequest,
     UploadInitRequest,
@@ -32,7 +31,7 @@ router = APIRouter(prefix="/books", tags=["书籍"])
 async def init_upload(
     request: UploadInitRequest,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> UploadInitResponse:
     """
     初始化书籍上传
@@ -62,7 +61,7 @@ async def init_upload(
 async def complete_upload(
     request: UploadCompleteRequest,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> BookResponse:
     """
     完成书籍上传
@@ -85,7 +84,7 @@ async def complete_upload(
 async def create_dedup_reference(
     request: DedupReferenceRequest,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> BookResponse:
     """
     创建秒传引用
@@ -106,7 +105,7 @@ async def create_dedup_reference(
 @router.get("", response_model=BookListResponse)
 async def list_books(
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
     page: int = Query(1, ge=1, description="页码"),
     page_size: int = Query(20, ge=1, le=100, description="每页数量"),
     search: str | None = Query(None, max_length=100, description="搜索关键词"),
@@ -139,7 +138,7 @@ async def list_books(
 async def get_book(
     book_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> BookResponse:
     """获取书籍详情"""
     service = BookService(db)
@@ -151,7 +150,7 @@ async def get_book(
 async def get_book_content(
     book_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> BookContentResponse:
     """
     获取书籍内容下载 URL
@@ -173,7 +172,7 @@ async def get_book_content(
 async def get_book_cover(
     book_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> BookCoverResponse:
     """获取书籍封面 URL"""
     service = BookService(db)
@@ -189,7 +188,7 @@ async def get_book_cover(
 async def delete_book(
     book_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
     permanent: bool = Query(False, description="是否永久删除"),
 ) -> BookDeleteResponse:
     """
@@ -246,3 +245,5 @@ def _book_to_response(book) -> BookResponse:
         created_at=book.created_at,
         updated_at=book.updated_at,
     )
+
+
