@@ -5,14 +5,13 @@ PowerSync 集成模块
 """
 
 from datetime import datetime, timedelta, timezone
-from typing import Annotated
 
 import jwt
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from app.api.deps import CurrentUser, get_current_user_optional
+from app.api.deps import CurrentUser
 from app.core.config import settings
 
 
@@ -103,7 +102,6 @@ async def get_powersync_credentials(
     )
 
     expires_at = datetime.now(timezone.utc) + expires_delta
-
     return PowerSyncCredentials(
         endpoint=settings.powersync.powersync_url,
         token=token,

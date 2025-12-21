@@ -8,14 +8,13 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
 
-from sqlalchemy import event, text
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
-from sqlalchemy.pool import NullPool
 
 from app.core.config import settings
 
@@ -38,11 +37,11 @@ def create_engine(
         poolclass: 连接池类型 (用于测试时使用 NullPool)
     """
     url = database_url or settings.database.database_url
-    
+
     engine_kwargs: dict[str, Any] = {
         "echo": echo if echo is not None else settings.database.database_echo,
     }
-    
+
     if poolclass is not None:
         engine_kwargs["poolclass"] = poolclass
     else:

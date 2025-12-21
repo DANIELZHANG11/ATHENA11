@@ -7,9 +7,10 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import CurrentUser, DeviceId, get_client_ip, get_db
+from app.api.deps import CurrentUser, DeviceId, get_client_ip, get_db_session
 from app.api.schemas.auth import (
     AuthResponse,
     CodeSentResponse,
@@ -29,7 +30,7 @@ router = APIRouter(prefix="/auth", tags=["认证"])
 @router.post("/email/send_code", response_model=CodeSentResponse)
 async def send_email_code(
     request: EmailCodeRequest,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> CodeSentResponse:
     """
     发送邮箱验证码
@@ -49,7 +50,7 @@ async def send_email_code(
 @router.post("/email/verify_code", response_model=AuthResponse)
 async def verify_email_code(
     request: EmailVerifyRequest,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
     http_request: Request,
 ) -> AuthResponse:
     """
@@ -97,7 +98,7 @@ async def verify_email_code(
 @router.post("/token/refresh", response_model=TokenResponse)
 async def refresh_token(
     request: TokenRefreshRequest,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> TokenResponse:
     """
     刷新访问令牌
@@ -170,7 +171,7 @@ async def logout(
 @router.get("/sessions", response_model=list[SessionResponse])
 async def list_sessions(
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
     device_id: DeviceId,
 ) -> list[SessionResponse]:
     """
@@ -178,14 +179,13 @@ async def list_sessions(
 
     返回当前用户的所有活跃登录会话。
     """
-    from sqlalchemy import select
     from app.models.user import UserSession
 
     result = await db.execute(
         select(UserSession)
         .where(
             UserSession.user_id == current_user.id,
-            UserSession.revoked == False,
+            UserSession.revoked.is_(False),
         )
         .order_by(UserSession.created_at.desc())
     )
@@ -210,7 +210,7 @@ async def list_sessions(
 async def revoke_session(
     session_id: str,
     current_user: CurrentUser,
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> dict[str, str]:
     """
     撤销指定会话

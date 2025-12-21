@@ -11,7 +11,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.database import get_db
+from app.core.database import get_db_session
 from app.core.exceptions import (
     TokenExpiredException,
     TokenInvalidException,
@@ -26,7 +26,7 @@ security = HTTPBearer(auto_error=False)
 
 async def get_current_user(
     credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(security)],
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> User:
     """
     获取当前认证用户
@@ -49,7 +49,7 @@ async def get_current_user(
 
     # 查询用户
     result = await db.execute(
-        select(User).where(User.id == payload.sub, User.is_active == True)
+        select(User).where(User.id == payload.sub, User.is_active)
     )
     user = result.scalar_one_or_none()
 
@@ -61,7 +61,7 @@ async def get_current_user(
 
 async def get_current_user_optional(
     credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(security)],
-    db: Annotated[AsyncSession, Depends(get_db)],
+    db: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> User | None:
     """
     获取当前用户 (可选)

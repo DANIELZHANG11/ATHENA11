@@ -1,0 +1,2192 @@
+Run pytest --cov=app --cov-report=xml
+ImportError while loading conftest '/home/runner/work/ATHENA11/ATHENA11/api/tests/conftest.py'.
+tests/conftest.py:18: in <module>
+    from app.core.database import get_db_session
+E   ImportError: cannot import name 'get_db_session' from 'app.core.database' (/home/runner/work/ATHENA11/ATHENA11/api/app/core/database.py)
+Error: Process completed with exit code 4.
+
+Run ruff check .
+warning: The top-level linter settings are deprecated in favour of their counterparts in the `lint` section. Please update the following options in `pyproject.toml`:
+  - 'ignore' -> 'lint.ignore'
+  - 'select' -> 'lint.select'
+  - 'isort' -> 'lint.isort'
+W293 Blank line contains whitespace
+  --> alembic/env.py:37:1
+   |
+35 |     """
+36 |     离线模式运行迁移
+37 |     
+   | ^^^^
+38 |     仅生成 SQL 脚本，不连接数据库。
+39 |     """
+   |
+help: Remove whitespace from blank line
+
+W293 Blank line contains whitespace
+  --> alembic/env.py:82:1
+   |
+80 |     """
+81 |     在线模式运行迁移
+82 |     
+   | ^^^^
+83 |     连接数据库并执行迁移。
+84 |     """
+   |
+help: Remove whitespace from blank line
+
+W291 Trailing whitespace
+ --> alembic/versions/001_initial_schema.py:4:9
+  |
+3 | Revision ID: 001
+4 | Revises: 
+  |         ^
+5 | Create Date: 2024-01-01 00:00:00.000000
+  |
+help: Remove trailing whitespace
+
+UP035 [*] Import from `collections.abc` instead: `Sequence`
+  --> alembic/versions/001_initial_schema.py:9:1
+   |
+ 7 | 创建所有初始表结构。
+ 8 | """
+ 9 | from typing import Sequence, Union
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 |
+11 | from alembic import op
+   |
+help: Import from `collections.abc`
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> alembic/versions/001_initial_schema.py:9:1
+   |
+ 7 |   创建所有初始表结构。
+ 8 |   """
+ 9 | / from typing import Sequence, Union
+10 | |
+11 | | from alembic import op
+12 | | import sqlalchemy as sa
+13 | | from sqlalchemy.dialects import postgresql
+   | |__________________________________________^
+14 |
+15 |   # revision identifiers, used by Alembic.
+   |
+help: Organize imports
+
+UP007 [*] Use `X | Y` for type annotations
+  --> alembic/versions/001_initial_schema.py:17:16
+   |
+15 | # revision identifiers, used by Alembic.
+16 | revision: str = '001'
+17 | down_revision: Union[str, None] = None
+   |                ^^^^^^^^^^^^^^^^
+18 | branch_labels: Union[str, Sequence[str], None] = None
+19 | depends_on: Union[str, Sequence[str], None] = None
+   |
+help: Convert to `X | Y`
+
+UP007 [*] Use `X | Y` for type annotations
+  --> alembic/versions/001_initial_schema.py:18:16
+   |
+16 | revision: str = '001'
+17 | down_revision: Union[str, None] = None
+18 | branch_labels: Union[str, Sequence[str], None] = None
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+19 | depends_on: Union[str, Sequence[str], None] = None
+   |
+help: Convert to `X | Y`
+
+UP007 [*] Use `X | Y` for type annotations
+  --> alembic/versions/001_initial_schema.py:19:13
+   |
+17 | down_revision: Union[str, None] = None
+18 | branch_labels: Union[str, Sequence[str], None] = None
+19 | depends_on: Union[str, Sequence[str], None] = None
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+help: Convert to `X | Y`
+
+W291 Trailing whitespace
+   --> alembic/versions/001_initial_schema.py:312:37
+    |
+310 |     # 向量索引需要单独创建
+311 |     op.execute('''
+312 |         ALTER TABLE document_vectors 
+    |                                     ^
+313 |         ALTER COLUMN embedding TYPE vector(1536) 
+314 |         USING embedding::vector(1536)
+    |
+help: Remove trailing whitespace
+
+W291 Trailing whitespace
+   --> alembic/versions/001_initial_schema.py:313:49
+    |
+311 |     op.execute('''
+312 |         ALTER TABLE document_vectors 
+313 |         ALTER COLUMN embedding TYPE vector(1536) 
+    |                                                 ^
+314 |         USING embedding::vector(1536)
+315 |     ''')
+    |
+help: Remove trailing whitespace
+
+W291 Trailing whitespace
+   --> alembic/versions/001_initial_schema.py:317:51
+    |
+315 |     ''')
+316 |     op.execute('''
+317 |         CREATE INDEX ix_document_vectors_embedding 
+    |                                                   ^
+318 |         ON document_vectors 
+319 |         USING ivfflat (embedding vector_cosine_ops)
+    |
+help: Remove trailing whitespace
+
+W291 Trailing whitespace
+   --> alembic/versions/001_initial_schema.py:318:28
+    |
+316 |     op.execute('''
+317 |         CREATE INDEX ix_document_vectors_embedding 
+318 |         ON document_vectors 
+    |                            ^
+319 |         USING ivfflat (embedding vector_cosine_ops)
+320 |         WITH (lists = 100)
+    |
+help: Remove trailing whitespace
+
+W291 [*] Trailing whitespace
+   --> alembic/versions/001_initial_schema.py:354:78
+    |
+352 |     # ==========================================================================
+353 |     # 启用 RLS
+354 |     tables_with_rls = ['books', 'book_position', 'reading_time_log', 'notes', 
+    |                                                                              ^
+355 |                        'highlights', 'bookmarks', 'shelves', 'shelf_books', 'user_settings']
+    |
+help: Remove trailing whitespace
+
+W293 [*] Blank line contains whitespace
+   --> alembic/versions/001_initial_schema.py:356:1
+    |
+354 |     tables_with_rls = ['books', 'book_position', 'reading_time_log', 'notes', 
+355 |                        'highlights', 'bookmarks', 'shelves', 'shelf_books', 'user_settings']
+356 |     
+    | ^^^^
+357 |     for table in tables_with_rls:
+358 |         op.execute(f'ALTER TABLE {table} ENABLE ROW LEVEL SECURITY')
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> alembic/versions/001_initial_schema.py:359:1
+    |
+357 |     for table in tables_with_rls:
+358 |         op.execute(f'ALTER TABLE {table} ENABLE ROW LEVEL SECURITY')
+359 |         
+    | ^^^^^^^^
+360 |         if table == 'shelf_books':
+361 |             # shelf_books 通过 shelf 关联到用户
+    |
+help: Remove whitespace from blank line
+
+W291 Trailing whitespace
+   --> alembic/versions/001_initial_schema.py:367:46
+    |
+365 |                 USING (
+366 |                     EXISTS (
+367 |                         SELECT 1 FROM shelves 
+    |                                              ^
+368 |                         WHERE shelves.id = {table}.shelf_id 
+369 |                         AND shelves.user_id = current_user_id()
+    |
+help: Remove trailing whitespace
+
+W291 Trailing whitespace
+   --> alembic/versions/001_initial_schema.py:368:60
+    |
+366 |                     EXISTS (
+367 |                         SELECT 1 FROM shelves 
+368 |                         WHERE shelves.id = {table}.shelf_id 
+    |                                                            ^
+369 |                         AND shelves.user_id = current_user_id()
+370 |                     )
+    |
+help: Remove trailing whitespace
+
+W291 [*] Trailing whitespace
+   --> alembic/versions/001_initial_schema.py:384:82
+    |
+382 |     # ==========================================================================
+383 |     # updated_at 触发器
+384 |     tables_with_updated_at = ['users', 'books', 'notes', 'highlights', 'shelves', 
+    |                                                                                  ^
+385 |                               'user_settings', 'ai_sessions', 'billing_subscriptions', 
+386 |                               'billing_quotas', 'system_config']
+    |
+help: Remove trailing whitespace
+
+W291 [*] Trailing whitespace
+   --> alembic/versions/001_initial_schema.py:385:87
+    |
+383 |     # updated_at 触发器
+384 |     tables_with_updated_at = ['users', 'books', 'notes', 'highlights', 'shelves', 
+385 |                               'user_settings', 'ai_sessions', 'billing_subscriptions', 
+    |                                                                                       ^
+386 |                               'billing_quotas', 'system_config']
+    |
+help: Remove trailing whitespace
+
+W293 [*] Blank line contains whitespace
+   --> alembic/versions/001_initial_schema.py:387:1
+    |
+385 |                               'user_settings', 'ai_sessions', 'billing_subscriptions', 
+386 |                               'billing_quotas', 'system_config']
+387 |     
+    | ^^^^
+388 |     for table in tables_with_updated_at:
+389 |         op.execute(f'''
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> alembic/versions/001_initial_schema.py:429:1
+    |
+427 |     # 删除发布
+428 |     op.execute('DROP PUBLICATION IF EXISTS athena_publication')
+429 |     
+    | ^^^^
+430 |     # 删除所有表（按依赖顺序）
+431 |     tables = [
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> alembic/versions/001_initial_schema.py:442:1
+    |
+440 |         'user_sessions', 'users',
+441 |     ]
+442 |     
+    | ^^^^
+443 |     for table in tables:
+444 |         op.drop_table(table)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> alembic/versions/001_initial_schema.py:445:1
+    |
+443 |     for table in tables:
+444 |         op.drop_table(table)
+445 |     
+    | ^^^^
+446 |     # 删除函数
+447 |     op.execute('DROP FUNCTION IF EXISTS current_user_id()')
+    |
+help: Remove whitespace from blank line
+
+E712 Avoid equality comparisons to `True`; use `User.is_active:` for truth checks
+  --> app/api/deps.py:52:52
+   |
+50 |     # 查询用户
+51 |     result = await db.execute(
+52 |         select(User).where(User.id == payload.sub, User.is_active == True)
+   |                                                    ^^^^^^^^^^^^^^^^^^^^^^
+53 |     )
+54 |     user = result.scalar_one_or_none()
+   |
+help: Replace with `User.is_active`
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> app/api/routes/auth.py:153:9
+    |
+151 |       """
+152 |       if device_id:
+153 | /         from sqlalchemy import select, update
+154 | |         from app.models.user import UserSession
+    | |_______________________________________________^
+155 |
+156 |           await db.execute(
+    |
+help: Organize imports
+
+F401 [*] `sqlalchemy.select` imported but unused
+   --> app/api/routes/auth.py:153:32
+    |
+151 |     """
+152 |     if device_id:
+153 |         from sqlalchemy import select, update
+    |                                ^^^^^^
+154 |         from app.models.user import UserSession
+    |
+help: Remove unused import: `sqlalchemy.select`
+
+E712 Avoid equality comparisons to `False`; use `not UserSession.revoked:` for false checks
+   --> app/api/routes/auth.py:161:17
+    |
+159 |                 UserSession.user_id == current_user.id,
+160 |                 UserSession.device_id == device_id,
+161 |                 UserSession.revoked == False,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+162 |             )
+163 |             .values(revoked=True)
+    |
+help: Replace with `not UserSession.revoked`
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> app/api/routes/auth.py:181:5
+    |
+179 |       返回当前用户的所有活跃登录会话。
+180 |       """
+181 | /     from sqlalchemy import select
+182 | |     from app.models.user import UserSession
+    | |___________________________________________^
+183 |
+184 |       result = await db.execute(
+    |
+help: Organize imports
+
+E712 Avoid equality comparisons to `False`; use `not UserSession.revoked:` for false checks
+   --> app/api/routes/auth.py:188:13
+    |
+186 |         .where(
+187 |             UserSession.user_id == current_user.id,
+188 |             UserSession.revoked == False,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+189 |         )
+190 |         .order_by(UserSession.created_at.desc())
+    |
+help: Replace with `not UserSession.revoked`
+
+F401 [*] `app.api.schemas.book.BookUpdateRequest` imported but unused
+  --> app/api/routes/books.py:20:5
+   |
+18 |     BookMetaResponse,
+19 |     BookResponse,
+20 |     BookUpdateRequest,
+   |     ^^^^^^^^^^^^^^^^^
+21 |     DedupReferenceRequest,
+22 |     UploadCompleteRequest,
+   |
+help: Remove unused import: `app.api.schemas.book.BookUpdateRequest`
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/api/routes/powersync.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / from datetime import datetime, timedelta, timezone
+ 8 | | from typing import Annotated
+ 9 | |
+10 | | import jwt
+11 | | from fastapi import APIRouter, Depends, Request
+12 | | from fastapi.responses import JSONResponse
+13 | | from pydantic import BaseModel
+14 | |
+15 | | from app.api.deps import CurrentUser, get_current_user_optional
+16 | | from app.core.config import settings
+   | |____________________________________^
+   |
+help: Organize imports
+
+F401 [*] `typing.Annotated` imported but unused
+  --> app/api/routes/powersync.py:8:20
+   |
+ 7 | from datetime import datetime, timedelta, timezone
+ 8 | from typing import Annotated
+   |                    ^^^^^^^^^
+ 9 |
+10 | import jwt
+   |
+help: Remove unused import: `typing.Annotated`
+
+F401 [*] `fastapi.Depends` imported but unused
+  --> app/api/routes/powersync.py:11:32
+   |
+10 | import jwt
+11 | from fastapi import APIRouter, Depends, Request
+   |                                ^^^^^^^
+12 | from fastapi.responses import JSONResponse
+13 | from pydantic import BaseModel
+   |
+help: Remove unused import: `fastapi.Depends`
+
+F401 [*] `app.api.deps.get_current_user_optional` imported but unused
+  --> app/api/routes/powersync.py:15:39
+   |
+13 | from pydantic import BaseModel
+14 |
+15 | from app.api.deps import CurrentUser, get_current_user_optional
+   |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+16 | from app.core.config import settings
+   |
+help: Remove unused import: `app.api.deps.get_current_user_optional`
+
+UP017 [*] Use `datetime.UTC` alias
+  --> app/api/routes/powersync.py:63:24
+   |
+61 |         expires_delta = timedelta(hours=24)
+62 |
+63 |     now = datetime.now(timezone.utc)
+   |                        ^^^^^^^^^^^^
+64 |     expire = now + expires_delta
+   |
+help: Convert to `datetime.UTC` alias
+
+UP017 [*] Use `datetime.UTC` alias
+   --> app/api/routes/powersync.py:105:31
+    |
+103 |     )
+104 |
+105 |     expires_at = datetime.now(timezone.utc) + expires_delta
+    |                               ^^^^^^^^^^^^
+106 |
+107 |     return PowerSyncCredentials(
+    |
+help: Convert to `datetime.UTC` alias
+
+UP017 [*] Use `datetime.UTC` alias
+   --> app/api/routes/powersync.py:129:31
+    |
+127 |     )
+128 |
+129 |     expires_at = datetime.now(timezone.utc) + expires_delta
+    |                               ^^^^^^^^^^^^
+130 |
+131 |     return PowerSyncCredentials(
+    |
+help: Convert to `datetime.UTC` alias
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> app/api/schemas/ai.py:5:1
+  |
+3 |   """
+4 |
+5 | / from datetime import datetime
+6 | |
+7 | | from pydantic import BaseModel, Field
+  | |_____________________________________^
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> app/api/schemas/auth.py:7:1
+  |
+5 |   """
+6 |
+7 | / from datetime import datetime
+8 | |
+9 | | from pydantic import BaseModel, EmailStr, Field
+  | |_______________________________________________^
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/api/schemas/book.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / from datetime import datetime
+ 8 | | from typing import Any
+ 9 | |
+10 | | from pydantic import BaseModel, Field
+   | |_____________________________________^
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> app/api/schemas/note.py:5:1
+  |
+3 |   """
+4 |
+5 | / from datetime import datetime
+6 | | from typing import Any
+7 | |
+8 | | from pydantic import BaseModel, Field
+  | |_____________________________________^
+  |
+help: Organize imports
+
+F401 [*] `sqlalchemy.event` imported but unused
+  --> app/core/database.py:11:24
+   |
+ 9 | from typing import Any
+10 |
+11 | from sqlalchemy import event, text
+   |                        ^^^^^
+12 | from sqlalchemy.ext.asyncio import (
+13 |     AsyncEngine,
+   |
+help: Remove unused import: `sqlalchemy.event`
+
+F401 [*] `sqlalchemy.pool.NullPool` imported but unused
+  --> app/core/database.py:18:29
+   |
+16 |     create_async_engine,
+17 | )
+18 | from sqlalchemy.pool import NullPool
+   |                             ^^^^^^^^
+19 |
+20 | from app.core.config import settings
+   |
+help: Remove unused import: `sqlalchemy.pool.NullPool`
+
+W293 [*] Blank line contains whitespace
+  --> app/core/database.py:41:1
+   |
+39 |     """
+40 |     url = database_url or settings.database.database_url
+41 |     
+   | ^^^^
+42 |     engine_kwargs: dict[str, Any] = {
+43 |         "echo": echo if echo is not None else settings.database.database_echo,
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/core/database.py:45:1
+   |
+43 |         "echo": echo if echo is not None else settings.database.database_echo,
+44 |     }
+45 |     
+   | ^^^^
+46 |     if poolclass is not None:
+47 |         engine_kwargs["poolclass"] = poolclass
+   |
+help: Remove whitespace from blank line
+
+F401 [*] `typing.Any` imported but unused
+  --> app/core/exceptions.py:8:20
+   |
+ 6 | """
+ 7 |
+ 8 | from typing import Any
+   |                    ^^^
+ 9 |
+10 | from fastapi import HTTPException, status
+   |
+help: Remove unused import: `typing.Any`
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/main.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / from contextlib import asynccontextmanager
+ 8 | | from typing import AsyncGenerator
+ 9 | |
+10 | | from fastapi import FastAPI, Request
+11 | | from fastapi.middleware.cors import CORSMiddleware
+12 | | from fastapi.responses import JSONResponse
+13 | | import structlog
+14 | |
+15 | | from app.core.config import settings
+16 | | from app.core.database import close_db, init_db
+17 | | from app.core.exceptions import AthenaException
+   | |_______________________________________________^
+18 |
+19 |   # 配置结构化日志
+   |
+help: Organize imports
+
+UP035 [*] Import from `collections.abc` instead: `AsyncGenerator`
+  --> app/main.py:8:1
+   |
+ 7 | from contextlib import asynccontextmanager
+ 8 | from typing import AsyncGenerator
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 9 |
+10 | from fastapi import FastAPI, Request
+   |
+help: Import from `collections.abc`
+
+ARG001 Unused function argument: `app`
+  --> app/main.py:42:20
+   |
+41 | @asynccontextmanager
+42 | async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+   |                    ^^^
+43 |     """应用生命周期管理"""
+44 |     # 启动时
+   |
+
+ARG001 Unused function argument: `request`
+  --> app/main.py:82:9
+   |
+80 |     @app.exception_handler(AthenaException)
+81 |     async def athena_exception_handler(
+82 |         request: Request, exc: AthenaException
+   |         ^^^^^^^
+83 |     ) -> JSONResponse:
+84 |         return JSONResponse(
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/models/__init__.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin, VersionMixin
+ 8 | |
+ 9 | | # 用户相关
+10 | | from app.models.user import (
+11 | |     User,
+12 | |     UserSession,
+13 | |     UserOAuthAccount,
+14 | |     UserStats,
+15 | |     Invite,
+16 | |     UserReadingGoal,
+17 | |     UserStreak,
+18 | |     UserSetting,
+19 | | )
+20 | |
+21 | | # 书籍相关
+22 | | from app.models.book import (
+23 | |     Book,
+24 | |     Shelf,
+25 | |     ShelfBook,
+26 | |     ConversionJob,
+27 | | )
+28 | |
+29 | | # 笔记与高亮
+30 | | from app.models.note import (
+31 | |     Note,
+32 | |     Highlight,
+33 | |     Bookmark,
+34 | |     Tag,
+35 | |     NoteTag,
+36 | |     HighlightTag,
+37 | | )
+38 | |
+39 | | # 阅读进度
+40 | | from app.models.reading import (
+41 | |     BookPosition,
+42 | |     ReadingTimeLog,
+43 | |     ReadingDaily,
+44 | | )
+45 | |
+46 | | # AI 相关
+47 | | from app.models.ai import (
+48 | |     AiModel,
+49 | |     AiConversation,
+50 | |     AiMessage,
+51 | |     AiConversationContext,
+52 | |     AiQueryCache,
+53 | |     PromptTemplate,
+54 | | )
+55 | |
+56 | | # 计费相关
+57 | | from app.models.billing import (
+58 | |     CreditAccount,
+59 | |     CreditLedger,
+60 | |     CreditProduct,
+61 | |     PaymentSession,
+62 | |     PaymentWebhookEvent,
+63 | |     PricingRule,
+64 | |     FreeQuotaUsage,
+65 | | )
+66 | |
+67 | | # 向量存储
+68 | | from app.models.vector import VectorDocument
+69 | |
+70 | | # 系统配置
+71 | | from app.models.system import (
+72 | |     SystemSetting,
+73 | |     FeatureFlag,
+74 | |     Translation,
+75 | |     OcrJob,
+76 | | )
+   | |_^
+77 |
+78 |   __all__ = [
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/models/ai.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import uuid
+ 8 | | from datetime import datetime
+ 9 | | from typing import TYPE_CHECKING, Any
+10 | |
+11 | | from sqlalchemy import (
+12 | |     Boolean,
+13 | |     DateTime,
+14 | |     ForeignKey,
+15 | |     Integer,
+16 | |     Numeric,
+17 | |     String,
+18 | |     Text,
+19 | |     BigInteger,
+20 | |     Index,
+21 | | )
+22 | | from sqlalchemy.dialects.postgresql import JSONB, UUID
+23 | | from sqlalchemy.orm import Mapped, mapped_column, relationship
+24 | |
+25 | | from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
+   | |_____________________________________________________________________^
+26 |
+27 |   if TYPE_CHECKING:
+   |
+help: Organize imports
+
+F401 [*] `typing.Any` imported but unused
+  --> app/models/ai.py:9:35
+   |
+ 7 | import uuid
+ 8 | from datetime import datetime
+ 9 | from typing import TYPE_CHECKING, Any
+   |                                   ^^^
+10 |
+11 | from sqlalchemy import (
+   |
+help: Remove unused import: `typing.Any`
+
+F401 [*] `sqlalchemy.BigInteger` imported but unused
+  --> app/models/ai.py:19:5
+   |
+17 |     String,
+18 |     Text,
+19 |     BigInteger,
+   |     ^^^^^^^^^^
+20 |     Index,
+21 | )
+   |
+help: Remove unused import: `sqlalchemy.BigInteger`
+
+F401 [*] `app.models.book.Book` imported but unused
+  --> app/models/ai.py:28:33
+   |
+27 | if TYPE_CHECKING:
+28 |     from app.models.book import Book
+   |                                 ^^^^
+29 |     from app.models.user import User
+   |
+help: Remove unused import: `app.models.book.Book`
+
+F401 [*] `app.models.user.User` imported but unused
+  --> app/models/ai.py:29:33
+   |
+27 | if TYPE_CHECKING:
+28 |     from app.models.book import Book
+29 |     from app.models.user import User
+   |                                 ^^^^
+   |
+help: Remove unused import: `app.models.user.User`
+
+W293 [*] Blank line contains whitespace
+  --> app/models/ai.py:90:1
+   |
+88 |     title: Mapped[str | None] = mapped_column(Text, nullable=True)
+89 |     summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+90 |     
+   | ^^^^
+91 |     # 会话类型
+92 |     conversation_type: Mapped[str] = mapped_column(
+   |
+help: Remove whitespace from blank line
+
+F401 [*] `sqlalchemy.String` imported but unused
+  --> app/models/base.py:11:43
+   |
+ 9 | from typing import Any
+10 |
+11 | from sqlalchemy import DateTime, Integer, String, Text, func
+   |                                           ^^^^^^
+12 | from sqlalchemy.dialects.postgresql import JSONB, UUID
+13 | from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+   |
+help: Remove unused import
+
+F401 [*] `sqlalchemy.Text` imported but unused
+  --> app/models/base.py:11:51
+   |
+ 9 | from typing import Any
+10 |
+11 | from sqlalchemy import DateTime, Integer, String, Text, func
+   |                                                   ^^^^
+12 | from sqlalchemy.dialects.postgresql import JSONB, UUID
+13 | from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+   |
+help: Remove unused import
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/models/billing.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import uuid
+ 8 | | from datetime import datetime
+ 9 | | from typing import TYPE_CHECKING, Any
+10 | |
+11 | | from sqlalchemy import (
+12 | |     Boolean,
+13 | |     DateTime,
+14 | |     ForeignKey,
+15 | |     Integer,
+16 | |     Numeric,
+17 | |     String,
+18 | |     Text,
+19 | |     BigInteger,
+20 | |     Index,
+21 | | )
+22 | | from sqlalchemy.dialects.postgresql import JSONB, UUID
+23 | | from sqlalchemy.orm import Mapped, mapped_column, relationship
+24 | |
+25 | | from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
+   | |_____________________________________________________________________^
+26 |
+27 |   if TYPE_CHECKING:
+   |
+help: Organize imports
+
+F401 [*] `sqlalchemy.orm.relationship` imported but unused
+  --> app/models/billing.py:23:51
+   |
+21 | )
+22 | from sqlalchemy.dialects.postgresql import JSONB, UUID
+23 | from sqlalchemy.orm import Mapped, mapped_column, relationship
+   |                                                   ^^^^^^^^^^^^
+24 |
+25 | from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
+   |
+help: Remove unused import: `sqlalchemy.orm.relationship`
+
+F401 [*] `app.models.user.User` imported but unused
+  --> app/models/billing.py:28:33
+   |
+27 | if TYPE_CHECKING:
+28 |     from app.models.user import User
+   |                                 ^^^^
+   |
+help: Remove unused import: `app.models.user.User`
+
+W293 [*] Blank line contains whitespace
+  --> app/models/billing.py:44:1
+   |
+42 |     # Credits 余额
+43 |     balance: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
+44 |     
+   | ^^^^
+45 |     # 钱包余额 (真实货币)
+46 |     wallet_amount: Mapped[float] = mapped_column(Numeric(12, 2), default=0, nullable=False)
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/models/billing.py:84:1
+   |
+82 |     # 交易描述
+83 |     description: Mapped[str | None] = mapped_column(Text, nullable=True)
+84 |     
+   | ^^^^
+85 |     # 关联信息
+86 |     reference_type: Mapped[str | None] = mapped_column(String(30), nullable=True)  # ai_message/ocr_job
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/models/billing.py:88:1
+   |
+86 |     reference_type: Mapped[str | None] = mapped_column(String(30), nullable=True)  # ai_message/ocr_job
+87 |     reference_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
+88 |     
+   | ^^^^
+89 |     # 元数据
+90 |     meta: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/billing.py:108:1
+    |
+106 |     name: Mapped[str] = mapped_column(String(100), nullable=False)
+107 |     description: Mapped[str | None] = mapped_column(Text, nullable=True)
+108 |     
+    | ^^^^
+109 |     # 积分数量
+110 |     credits: Mapped[int] = mapped_column(Integer, nullable=False)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/billing.py:112:1
+    |
+110 |     credits: Mapped[int] = mapped_column(Integer, nullable=False)
+111 |     bonus_credits: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+112 |     
+    | ^^^^
+113 |     # 价格
+114 |     price: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/billing.py:116:1
+    |
+114 |     price: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
+115 |     currency: Mapped[str] = mapped_column(String(3), default="CNY", nullable=False)
+116 |     
+    | ^^^^
+117 |     # Stripe 产品 ID
+118 |     stripe_price_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/billing.py:148:1
+    |
+146 |     product_type: Mapped[str] = mapped_column(String(30), nullable=False)  # credits/subscription
+147 |     product_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
+148 |     
+    | ^^^^
+149 |     # 金额
+150 |     amount: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/billing.py:159:1
+    |
+157 |         nullable=False,
+158 |     )  # pending/processing/completed/failed/cancelled/refunded
+159 |     
+    | ^^^^
+160 |     # 时间戳
+161 |     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/billing.py:163:1
+    |
+161 |     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+162 |     expired_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+163 |     
+    | ^^^^
+164 |     # 元数据
+165 |     meta: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/billing.py:184:1
+    |
+182 |     event_id: Mapped[str] = mapped_column(String(200), nullable=False, index=True)
+183 |     event_type: Mapped[str] = mapped_column(String(100), nullable=False)
+184 |     
+    | ^^^^
+185 |     # 原始数据
+186 |     payload: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/billing.py:187:1
+    |
+185 |     # 原始数据
+186 |     payload: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
+187 |     
+    | ^^^^
+188 |     # 处理状态
+189 |     processed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/billing.py:209:1
+    |
+207 |     service_type: Mapped[str] = mapped_column(String(30), nullable=False)  # ai_chat/ocr/translate
+208 |     name: Mapped[str] = mapped_column(String(100), nullable=False)
+209 |     
+    | ^^^^
+210 |     # 定价参数
+211 |     unit: Mapped[str] = mapped_column(String(20), nullable=False)  # token/page/character
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/billing.py:214:1
+    |
+212 |     credits_per_unit: Mapped[float] = mapped_column(Numeric(10, 4), nullable=False)
+213 |     min_credits: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+214 |     
+    | ^^^^
+215 |     # 会员折扣
+216 |     free_tier_limit: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    |
+help: Remove whitespace from blank line
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/models/book.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import uuid
+ 8 | | from datetime import datetime
+ 9 | | from typing import TYPE_CHECKING, Any
+10 | |
+11 | | from sqlalchemy import (
+12 | |     Boolean,
+13 | |     DateTime,
+14 | |     ForeignKey,
+15 | |     Integer,
+16 | |     Numeric,
+17 | |     String,
+18 | |     Text,
+19 | |     BigInteger,
+20 | |     Index,
+21 | | )
+22 | | from sqlalchemy.dialects.postgresql import JSONB, UUID
+23 | | from sqlalchemy.orm import Mapped, mapped_column, relationship
+24 | |
+25 | | from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin, VersionMixin
+   | |____________________________________________________________________________________________________^
+26 |
+27 |   if TYPE_CHECKING:
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/models/book.py:28:5
+   |
+27 |   if TYPE_CHECKING:
+28 | /     from app.models.user import User
+29 | |     from app.models.note import Note, Highlight, Bookmark
+30 | |     from app.models.reading import BookPosition, ReadingTimeLog
+   | |_______________________________________________________________^
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/models/note.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import uuid
+ 8 | | from datetime import datetime
+ 9 | | from typing import TYPE_CHECKING, Any
+10 | |
+11 | | from sqlalchemy import (
+12 | |     Boolean,
+13 | |     DateTime,
+14 | |     ForeignKey,
+15 | |     Integer,
+16 | |     String,
+17 | |     Text,
+18 | |     Index,
+19 | | )
+20 | | from sqlalchemy.dialects.postgresql import UUID, TSVECTOR
+21 | | from sqlalchemy.orm import Mapped, mapped_column, relationship
+22 | |
+23 | | from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin, VersionMixin
+   | |____________________________________________________________________________________________________^
+24 |
+25 |   if TYPE_CHECKING:
+   |
+help: Organize imports
+
+F401 [*] `sqlalchemy.Boolean` imported but unused
+  --> app/models/note.py:12:5
+   |
+11 | from sqlalchemy import (
+12 |     Boolean,
+   |     ^^^^^^^
+13 |     DateTime,
+14 |     ForeignKey,
+   |
+help: Remove unused import: `sqlalchemy.Boolean`
+
+F401 [*] `app.models.user.User` imported but unused
+  --> app/models/note.py:27:33
+   |
+25 | if TYPE_CHECKING:
+26 |     from app.models.book import Book
+27 |     from app.models.user import User
+   |                                 ^^^^
+   |
+help: Remove unused import: `app.models.user.User`
+
+W293 [*] Blank line contains whitespace
+  --> app/models/note.py:50:1
+   |
+48 |     # 笔记内容
+49 |     content: Mapped[str] = mapped_column(Text, nullable=False)
+50 |     
+   | ^^^^
+51 |     # 位置信息
+52 |     chapter: Mapped[str | None] = mapped_column(Text, nullable=True)
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/note.py:110:1
+    |
+108 |     start_location: Mapped[str] = mapped_column(Text, nullable=False)
+109 |     end_location: Mapped[str] = mapped_column(Text, nullable=False)
+110 |     
+    | ^^^^
+111 |     # 高亮内容 (选中的文本)
+112 |     text: Mapped[str | None] = mapped_column(Text, nullable=True)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/note.py:113:1
+    |
+111 |     # 高亮内容 (选中的文本)
+112 |     text: Mapped[str | None] = mapped_column(Text, nullable=True)
+113 |     
+    | ^^^^
+114 |     # 样式
+115 |     color: Mapped[str | None] = mapped_column(String(20), nullable=True)  # yellow/green/blue/pink/purple
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/note.py:116:1
+    |
+114 |     # 样式
+115 |     color: Mapped[str | None] = mapped_column(String(20), nullable=True)  # yellow/green/blue/pink/purple
+116 |     
+    | ^^^^
+117 |     # 附加评论
+118 |     comment: Mapped[str | None] = mapped_column(Text, nullable=True)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/note.py:174:1
+    |
+172 |     location: Mapped[str] = mapped_column(Text, nullable=False)  # CFI 或页码
+173 |     page: Mapped[int | None] = mapped_column(Integer, nullable=True)
+174 |     
+    | ^^^^
+175 |     # 可选标题
+176 |     title: Mapped[str | None] = mapped_column(Text, nullable=True)
+    |
+help: Remove whitespace from blank line
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/models/reading.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import uuid
+ 8 | | from datetime import date, datetime
+ 9 | | from typing import TYPE_CHECKING
+10 | |
+11 | | from sqlalchemy import (
+12 | |     Boolean,
+13 | |     Date,
+14 | |     DateTime,
+15 | |     ForeignKey,
+16 | |     Integer,
+17 | |     Numeric,
+18 | |     String,
+19 | |     Text,
+20 | |     BigInteger,
+21 | |     Index,
+22 | | )
+23 | | from sqlalchemy.dialects.postgresql import UUID
+24 | | from sqlalchemy.orm import Mapped, mapped_column, relationship
+25 | |
+26 | | from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
+   | |_____________________________________________________________________^
+27 |
+28 |   if TYPE_CHECKING:
+   |
+help: Organize imports
+
+F401 [*] `app.models.user.User` imported but unused
+  --> app/models/reading.py:30:33
+   |
+28 | if TYPE_CHECKING:
+29 |     from app.models.book import Book
+30 |     from app.models.user import User
+   |                                 ^^^^
+   |
+help: Remove unused import: `app.models.user.User`
+
+W293 [*] Blank line contains whitespace
+   --> app/models/reading.py:100:1
+    |
+ 98 |     # 会话状态
+ 99 |     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+100 |     
+    | ^^^^
+101 |     # 阅读时长 (毫秒)
+102 |     duration_ms: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/reading.py:103:1
+    |
+101 |     # 阅读时长 (毫秒)
+102 |     duration_ms: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
+103 |     
+    | ^^^^
+104 |     # 最后活跃时间
+105 |     last_active_at: Mapped[datetime] = mapped_column(
+    |
+help: Remove whitespace from blank line
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/models/system.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import uuid
+ 8 | | from datetime import datetime
+ 9 | | from typing import Any
+10 | |
+11 | | from sqlalchemy import (
+12 | |     Boolean,
+13 | |     DateTime,
+14 | |     Integer,
+15 | |     String,
+16 | |     Text,
+17 | |     Index,
+18 | | )
+19 | | from sqlalchemy.dialects.postgresql import JSONB, UUID
+20 | | from sqlalchemy.orm import Mapped, mapped_column
+21 | |
+22 | | from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
+   | |_____________________________________________________________________^
+   |
+help: Organize imports
+
+W293 [*] Blank line contains whitespace
+  --> app/models/system.py:32:1
+   |
+30 |     # 配置键
+31 |     key: Mapped[str] = mapped_column(String(100), primary_key=True)
+32 |     
+   | ^^^^
+33 |     # 配置值
+34 |     value: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/models/system.py:35:1
+   |
+33 |     # 配置值
+34 |     value: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
+35 |     
+   | ^^^^
+36 |     # 描述
+37 |     description: Mapped[str | None] = mapped_column(Text, nullable=True)
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/models/system.py:38:1
+   |
+36 |     # 描述
+37 |     description: Mapped[str | None] = mapped_column(Text, nullable=True)
+38 |     
+   | ^^^^
+39 |     # 是否可被 API 修改
+40 |     is_readonly: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/models/system.py:57:1
+   |
+55 |     # 开关状态
+56 |     is_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+57 |     
+   | ^^^^
+58 |     # 灰度发布
+59 |     rollout_percentage: Mapped[int] = mapped_column(Integer, default=100, nullable=False)  # 0-100
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/models/system.py:60:1
+   |
+58 |     # 灰度发布
+59 |     rollout_percentage: Mapped[int] = mapped_column(Integer, default=100, nullable=False)  # 0-100
+60 |     
+   | ^^^^
+61 |     # 白名单/黑名单
+62 |     whitelist_user_ids: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/models/system.py:64:1
+   |
+62 |     whitelist_user_ids: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
+63 |     blacklist_user_ids: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
+64 |     
+   | ^^^^
+65 |     # 条件
+66 |     conditions: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/models/system.py:81:1
+   |
+79 |     key: Mapped[str] = mapped_column(String(200), nullable=False, index=True)
+80 |     namespace: Mapped[str] = mapped_column(String(50), default="common", nullable=False)
+81 |     
+   | ^^^^
+82 |     # 语言
+83 |     language: Mapped[str] = mapped_column(String(10), nullable=False)  # zh-CN/en-US
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/models/system.py:84:1
+   |
+82 |     # 语言
+83 |     language: Mapped[str] = mapped_column(String(10), nullable=False)  # zh-CN/en-US
+84 |     
+   | ^^^^
+85 |     # 翻译值
+86 |     value: Mapped[str] = mapped_column(Text, nullable=False)
+   |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+  --> app/models/system.py:87:1
+   |
+85 |     # 翻译值
+86 |     value: Mapped[str] = mapped_column(Text, nullable=False)
+87 |     
+   | ^^^^
+88 |     # 来源
+89 |     source: Mapped[str] = mapped_column(String(20), default="tolgee", nullable=False)  # tolgee/manual
+   |
+help: Remove whitespace from blank line
+
+F401 [*] `sqlalchemy.Numeric` imported but unused
+  --> app/models/user.py:11:64
+   |
+ 9 | from typing import TYPE_CHECKING, Any
+10 |
+11 | from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, Numeric, String, Text, func
+   |                                                                ^^^^^^^
+12 | from sqlalchemy.dialects.postgresql import JSONB, UUID
+13 | from sqlalchemy.orm import Mapped, mapped_column, relationship
+   |
+help: Remove unused import
+
+F401 [*] `sqlalchemy.func` imported but unused
+  --> app/models/user.py:11:87
+   |
+ 9 | from typing import TYPE_CHECKING, Any
+10 |
+11 | from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, Numeric, String, Text, func
+   |                                                                                       ^^^^
+12 | from sqlalchemy.dialects.postgresql import JSONB, UUID
+13 | from sqlalchemy.orm import Mapped, mapped_column, relationship
+   |
+help: Remove unused import
+
+F401 [*] `app.models.base.SoftDeleteMixin` imported but unused
+  --> app/models/user.py:15:35
+   |
+13 | from sqlalchemy.orm import Mapped, mapped_column, relationship
+14 |
+15 | from app.models.base import Base, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin, VersionMixin
+   |                                   ^^^^^^^^^^^^^^^
+16 |
+17 | if TYPE_CHECKING:
+   |
+help: Remove unused import: `app.models.base.SoftDeleteMixin`
+
+F401 [*] `app.models.reading.BookPosition` imported but unused
+  --> app/models/user.py:19:36
+   |
+17 | if TYPE_CHECKING:
+18 |     from app.models.book import Book
+19 |     from app.models.reading import BookPosition, ReadingTimeLog
+   |                                    ^^^^^^^^^^^^
+   |
+help: Remove unused import
+
+F401 [*] `app.models.reading.ReadingTimeLog` imported but unused
+  --> app/models/user.py:19:50
+   |
+17 | if TYPE_CHECKING:
+18 |     from app.models.book import Book
+19 |     from app.models.reading import BookPosition, ReadingTimeLog
+   |                                                  ^^^^^^^^^^^^^^
+   |
+help: Remove unused import
+
+W293 [*] Blank line contains whitespace
+   --> app/models/user.py:108:1
+    |
+106 |         index=True,
+107 |     )
+108 |     
+    | ^^^^
+109 |     # 设备信息
+110 |     device_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/user.py:186:1
+    |
+184 |     # 邀请统计
+185 |     invite_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+186 |     
+    | ^^^^
+187 |     # 额外配额 (通过邀请获得)
+188 |     extra_storage_quota: Mapped[int] = mapped_column(Integer, default=0, nullable=False)  # 单位: MB
+    |
+help: Remove whitespace from blank line
+
+W293 [*] Blank line contains whitespace
+   --> app/models/user.py:222:1
+    |
+220 |     # 邀请码快照
+221 |     code_used: Mapped[str] = mapped_column(String(20), nullable=False)
+222 |     
+    | ^^^^
+223 |     # 状态
+224 |     status: Mapped[str] = mapped_column(
+    |
+help: Remove whitespace from blank line
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app/models/vector.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import uuid
+ 8 | | from datetime import datetime
+ 9 | | from typing import TYPE_CHECKING, Any
+10 | |
+11 | | from sqlalchemy import (
+12 | |     DateTime,
+13 | |     ForeignKey,
+14 | |     Integer,
+15 | |     String,
+16 | |     Text,
+17 | |     Index,
+18 | | )
+19 | | from sqlalchemy.dialects.postgresql import UUID
+20 | | from sqlalchemy.orm import Mapped, mapped_column
+21 | |
+22 | | from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
+   | |_____________________________________________________________________^
+23 |
+24 |   # pgvector 类型需要特殊处理
+   |
+help: Organize imports
+
+F401 [*] `datetime.datetime` imported but unused
+ --> app/models/vector.py:8:22
+  |
+7 | import uuid
+8 | from datetime import datetime
+  |                      ^^^^^^^^
+9 | from typing import TYPE_CHECKING, Any
+  |
+help: Remove unused import: `datetime.datetime`
+
+F401 [*] `typing.TYPE_CHECKING` imported but unused
+  --> app/models/vector.py:9:20
+   |
+ 7 | import uuid
+ 8 | from datetime import datetime
+ 9 | from typing import TYPE_CHECKING, Any
+   |                    ^^^^^^^^^^^^^
+10 |
+11 | from sqlalchemy import (
+   |
+help: Remove unused import
+
+F401 [*] `typing.Any` imported but unused
+  --> app/models/vector.py:9:35
+   |
+ 7 | import uuid
+ 8 | from datetime import datetime
+ 9 | from typing import TYPE_CHECKING, Any
+   |                                   ^^^
+10 |
+11 | from sqlalchemy import (
+   |
+help: Remove unused import
+
+F401 [*] `sqlalchemy.DateTime` imported but unused
+  --> app/models/vector.py:12:5
+   |
+11 | from sqlalchemy import (
+12 |     DateTime,
+   |     ^^^^^^^^
+13 |     ForeignKey,
+14 |     Integer,
+   |
+help: Remove unused import: `sqlalchemy.DateTime`
+
+W293 [*] Blank line contains whitespace
+  --> app/models/vector.py:53:1
+   |
+51 |     # 文档内容
+52 |     content: Mapped[str] = mapped_column(Text, nullable=False)
+53 |     
+   | ^^^^
+54 |     # 位置信息
+55 |     chunk_index: Mapped[int] = mapped_column(Integer, nullable=False)
+   |
+help: Remove whitespace from blank line
+
+W291 [*] Trailing whitespace
+  --> app/models/vector.py:72:61
+   |
+70 |         Index("idx_vectors_user_book", "user_id", "book_id"),
+71 |         # HNSW 索引需要在迁移中单独创建:
+72 |         # CREATE INDEX idx_vectors_embedding_hnsw ON vectors 
+   |                                                             ^
+73 |         # USING hnsw (embedding vector_cosine_ops) WITH (m = 16, ef_construction = 64);
+74 |     )
+   |
+help: Remove trailing whitespace
+
+F401 [*] `datetime.datetime` imported but unused
+  --> app/services/ai_service.py:8:22
+   |
+ 7 | import json
+ 8 | from datetime import datetime, timezone
+   |                      ^^^^^^^^
+ 9 | from typing import Any, AsyncGenerator
+10 | from uuid import UUID
+   |
+help: Remove unused import
+
+F401 [*] `datetime.timezone` imported but unused
+  --> app/services/ai_service.py:8:32
+   |
+ 7 | import json
+ 8 | from datetime import datetime, timezone
+   |                                ^^^^^^^^
+ 9 | from typing import Any, AsyncGenerator
+10 | from uuid import UUID
+   |
+help: Remove unused import
+
+UP035 [*] Import from `collections.abc` instead: `AsyncGenerator`
+  --> app/services/ai_service.py:9:1
+   |
+ 7 | import json
+ 8 | from datetime import datetime, timezone
+ 9 | from typing import Any, AsyncGenerator
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 | from uuid import UUID
+   |
+help: Import from `collections.abc`
+
+F401 [*] `typing.Any` imported but unused
+  --> app/services/ai_service.py:9:20
+   |
+ 7 | import json
+ 8 | from datetime import datetime, timezone
+ 9 | from typing import Any, AsyncGenerator
+   |                    ^^^
+10 | from uuid import UUID
+   |
+help: Remove unused import: `typing.Any`
+
+F401 [*] `app.models.Book` imported but unused
+  --> app/services/ai_service.py:19:46
+   |
+17 | from app.core.config import settings
+18 | from app.core.exceptions import AthenaException, ErrorCode
+19 | from app.models import AIMessage, AISession, Book, DocumentVector
+   |                                              ^^^^
+20 |
+21 | logger = structlog.get_logger()
+   |
+help: Remove unused import
+
+F401 [*] `app.models.DocumentVector` imported but unused
+  --> app/services/ai_service.py:19:52
+   |
+17 | from app.core.config import settings
+18 | from app.core.exceptions import AthenaException, ErrorCode
+19 | from app.models import AIMessage, AISession, Book, DocumentVector
+   |                                                    ^^^^^^^^^^^^^^
+20 |
+21 | logger = structlog.get_logger()
+   |
+help: Remove unused import
+
+W291 Trailing whitespace
+   --> app/services/ai_service.py:157:35
+    |
+155 |         await self.db.execute(
+156 |             text("""
+157 |                 UPDATE ai_sessions 
+    |                                   ^
+158 |                 SET updated_at = NOW() 
+159 |                 WHERE id = :session_id::uuid
+    |
+help: Remove trailing whitespace
+
+W291 Trailing whitespace
+   --> app/services/ai_service.py:158:39
+    |
+156 |             text("""
+157 |                 UPDATE ai_sessions 
+158 |                 SET updated_at = NOW() 
+    |                                       ^
+159 |                 WHERE id = :session_id::uuid
+160 |             """),
+    |
+help: Remove trailing whitespace
+
+ARG002 Unused method argument: `stream`
+   --> app/services/ai_service.py:177:9
+    |
+175 |         session_id: str | None = None,
+176 |         book_id: str | None = None,
+177 |         stream: bool = False,
+    |         ^^^^^^
+178 |     ) -> dict:
+179 |         """
+    |
+
+F841 Local variable `user_message` is assigned to but never used
+   --> app/services/ai_service.py:195:9
+    |
+194 |         # 保存用户消息
+195 |         user_message = await self.add_message(
+    |         ^^^^^^^^^^^^
+196 |             session_id=str(session.id),
+197 |             role="user",
+    |
+help: Remove assignment to unused variable `user_message`
+
+W291 Trailing whitespace
+   --> app/services/ai_service.py:364:19
+    |
+362 |         # 构建查询
+363 |         sql = """
+364 |             SELECT 
+    |                   ^
+365 |                 dv.book_id,
+366 |                 b.title as book_title,
+    |
+help: Remove trailing whitespace
+
+B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   --> app/services/ai_service.py:460:17
+    |
+458 |               except httpx.HTTPStatusError as e:
+459 |                   logger.error("AI API error", status=e.response.status_code)
+460 | /                 raise AthenaException(
+461 | |                     code=ErrorCode.EXTERNAL_SERVICE_ERROR,
+462 | |                     message="AI service error",
+463 | |                 )
+    | |_________________^
+464 |               except Exception as e:
+465 |                   logger.exception("AI API call failed")
+    |
+
+F841 [*] Local variable `e` is assigned to but never used
+   --> app/services/ai_service.py:464:33
+    |
+462 |                     message="AI service error",
+463 |                 )
+464 |             except Exception as e:
+    |                                 ^
+465 |                 logger.exception("AI API call failed")
+466 |                 raise AthenaException(
+    |
+help: Remove assignment to unused variable `e`
+
+B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   --> app/services/ai_service.py:466:17
+    |
+464 |               except Exception as e:
+465 |                   logger.exception("AI API call failed")
+466 | /                 raise AthenaException(
+467 | |                     code=ErrorCode.EXTERNAL_SERVICE_ERROR,
+468 | |                     message="AI service unavailable",
+469 | |                 )
+    | |_________________^
+470 |
+471 |       async def _call_ai_api_stream(
+    |
+
+F841 [*] Local variable `e` is assigned to but never used
+   --> app/services/ai_service.py:506:33
+    |
+504 |                                 continue
+505 |
+506 |             except Exception as e:
+    |                                 ^
+507 |                 logger.exception("AI API stream failed")
+508 |                 raise
+    |
+help: Remove assignment to unused variable `e`
+
+F401 [*] `datetime.timedelta` imported but unused
+  --> app/services/auth_service.py:8:37
+   |
+ 7 | import secrets
+ 8 | from datetime import UTC, datetime, timedelta
+   |                                     ^^^^^^^^^
+ 9 |
+10 | import redis.asyncio as redis
+   |
+help: Remove unused import: `datetime.timedelta`
+
+F401 [*] `app.core.exceptions.EmailAlreadyRegisteredException` imported but unused
+  --> app/services/auth_service.py:18:5
+   |
+16 |     AuthCodeInvalidException,
+17 |     AuthCodeRateLimitedException,
+18 |     EmailAlreadyRegisteredException,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+19 |     TokenInvalidException,
+20 | )
+   |
+help: Remove unused import: `app.core.exceptions.EmailAlreadyRegisteredException`
+
+F841 Local variable `session` is assigned to but never used
+   --> app/services/auth_service.py:143:9
+    |
+142 |         # 创建会话
+143 |         session = await self._create_session(
+    |         ^^^^^^^
+144 |             user=user,
+145 |             device_id=device_id,
+    |
+help: Remove assignment to unused variable `session`
+
+E712 Avoid equality comparisons to `True`; use `User.is_active:` for truth checks
+   --> app/services/auth_service.py:175:56
+    |
+173 |         # 验证用户存在且活跃
+174 |         result = await self.db.execute(
+175 |             select(User).where(User.id == payload.sub, User.is_active == True)
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^
+176 |         )
+177 |         user = result.scalar_one_or_none()
+    |
+help: Replace with `User.is_active`
+
+E712 Avoid equality comparisons to `False`; use `not UserSession.revoked:` for false checks
+   --> app/services/auth_service.py:202:17
+    |
+200 |                 UserSession.id == session_id,
+201 |                 UserSession.user_id == user_id,
+202 |                 UserSession.revoked == False,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+203 |             )
+204 |         )
+    |
+help: Replace with `not UserSession.revoked`
+
+F401 [*] `uuid` imported but unused
+ --> app/services/book_service.py:7:8
+  |
+5 | """
+6 |
+7 | import uuid
+  |        ^^^^
+8 | from datetime import UTC, datetime, timedelta
+9 | from typing import Any
+  |
+help: Remove unused import: `uuid`
+
+F401 [*] `sqlalchemy.and_` imported but unused
+  --> app/services/book_service.py:11:24
+   |
+ 9 | from typing import Any
+10 |
+11 | from sqlalchemy import and_, func, or_, select, update
+   |                        ^^^^
+12 | from sqlalchemy.ext.asyncio import AsyncSession
+   |
+help: Remove unused import: `sqlalchemy.and_`
+
+F401 [*] `app.core.exceptions.QuotaExceededException` imported but unused
+  --> app/services/book_service.py:19:5
+   |
+17 |     BookNotFoundException,
+18 |     CanonicalNotFoundException,
+19 |     QuotaExceededException,
+   |     ^^^^^^^^^^^^^^^^^^^^^^
+20 |     UploadForbiddenQuotaExceededException,
+21 | )
+   |
+help: Remove unused import: `app.core.exceptions.QuotaExceededException`
+
+F401 [*] `sqlalchemy.update` imported but unused
+  --> app/services/note_service.py:12:46
+   |
+11 | import structlog
+12 | from sqlalchemy import delete, func, select, update
+   |                                              ^^^^^^
+13 | from sqlalchemy.ext.asyncio import AsyncSession
+   |
+help: Remove unused import: `sqlalchemy.update`
+
+UP017 [*] Use `datetime.UTC` alias
+   --> app/services/note_service.py:133:40
+    |
+131 |             note.color = color
+132 |
+133 |         note.updated_at = datetime.now(timezone.utc)
+    |                                        ^^^^^^^^^^^^
+134 |
+135 |         await self.db.commit()
+    |
+help: Convert to `datetime.UTC` alias
+
+UP017 [*] Use `datetime.UTC` alias
+   --> app/services/note_service.py:143:40
+    |
+141 |         """软删除笔记"""
+142 |         note = await self.get_note(note_id, user_id)
+143 |         note.deleted_at = datetime.now(timezone.utc)
+    |                                        ^^^^^^^^^^^^
+144 |
+145 |         await self.db.commit()
+    |
+help: Convert to `datetime.UTC` alias
+
+UP017 [*] Use `datetime.UTC` alias
+   --> app/services/note_service.py:225:45
+    |
+223 |             highlight.color = color
+224 |
+225 |         highlight.updated_at = datetime.now(timezone.utc)
+    |                                             ^^^^^^^^^^^^
+226 |
+227 |         await self.db.commit()
+    |
+help: Convert to `datetime.UTC` alias
+
+UP017 [*] Use `datetime.UTC` alias
+   --> app/services/note_service.py:235:45
+    |
+233 |         """软删除高亮"""
+234 |         highlight = await self.get_highlight(highlight_id, user_id)
+235 |         highlight.deleted_at = datetime.now(timezone.utc)
+    |                                             ^^^^^^^^^^^^
+236 |
+237 |         await self.db.commit()
+    |
+help: Convert to `datetime.UTC` alias
+
+UP017 [*] Use `datetime.UTC` alias
+   --> app/services/note_service.py:305:44
+    |
+303 |         """软删除书签"""
+304 |         bookmark = await self.get_bookmark(bookmark_id, user_id)
+305 |         bookmark.deleted_at = datetime.now(timezone.utc)
+    |                                            ^^^^^^^^^^^^
+306 |
+307 |         await self.db.commit()
+    |
+help: Convert to `datetime.UTC` alias
+
+UP017 [*] Use `datetime.UTC` alias
+   --> app/services/note_service.py:396:41
+    |
+394 |             shelf.sort_order = sort_order
+395 |
+396 |         shelf.updated_at = datetime.now(timezone.utc)
+    |                                         ^^^^^^^^^^^^
+397 |
+398 |         await self.db.commit()
+    |
+help: Convert to `datetime.UTC` alias
+
+UP017 [*] Use `datetime.UTC` alias
+   --> app/services/note_service.py:406:41
+    |
+404 |         """软删除书架"""
+405 |         shelf = await self.get_shelf(shelf_id, user_id)
+406 |         shelf.deleted_at = datetime.now(timezone.utc)
+    |                                         ^^^^^^^^^^^^
+407 |
+408 |         # 同时删除书架-书籍关联
+    |
+help: Convert to `datetime.UTC` alias
+
+F401 [*] `hashlib` imported but unused
+ --> app/services/storage_service.py:7:8
+  |
+5 | """
+6 |
+7 | import hashlib
+  |        ^^^^^^^
+8 | import uuid
+9 | from datetime import timedelta
+  |
+help: Remove unused import: `hashlib`
+
+ARG002 Unused method argument: `content_type`
+  --> app/services/storage_service.py:44:9
+   |
+42 |         self,
+43 |         filename: str,
+44 |         content_type: str,
+   |         ^^^^^^^^^^^^
+45 |         user_id: str,
+46 |         expires: timedelta = timedelta(hours=1),
+   |
+
+B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+  --> app/tasks/book_tasks.py:98:9
+   |
+96 |         logger.exception("Book processing failed", book_id=book_id)
+97 |         _update_book_status(book_id, "failed", str(e))
+98 |         raise self.retry(exc=e)
+   |         ^^^^^^^^^^^^^^^^^^^^^^^
+   |
+
+ARG001 Unused function argument: `format`
+   --> app/tasks/book_tasks.py:159:5
+    |
+157 |     input_path: Path,
+158 |     storage: StorageService,
+159 |     format: str,
+    |     ^^^^^^
+160 | ) -> dict:
+161 |     """
+    |
+
+F401 `ebooklib` imported but unused; consider using `importlib.util.find_spec` to test for availability
+   --> app/tasks/book_tasks.py:167:16
+    |
+165 |     """
+166 |     try:
+167 |         import ebooklib
+    |                ^^^^^^^^
+168 |         from ebooklib import epub
+    |
+help: Remove unused import: `ebooklib`
+
+F821 Undefined name `fitz`
+   --> app/tasks/book_tasks.py:244:38
+    |
+242 |         page = doc[0]
+243 |         # 渲染为图像 (2x 缩放)
+244 |         pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
+    |                                      ^^^^
+245 |
+246 |         # 转换为 JPEG
+    |
+
+F401 [*] `ebooklib.epub` imported but unused
+   --> app/tasks/book_tasks.py:270:30
+    |
+268 |     """
+269 |     try:
+270 |         from ebooklib import epub
+    |                              ^^^^
+271 |
+272 |         # 尝试获取封面
+    |
+help: Remove unused import: `ebooklib.epub`
+
+F821 Undefined name `ebooklib`
+   --> app/tasks/book_tasks.py:274:35
+    |
+272 |         # 尝试获取封面
+273 |         for item in book.get_items():
+274 |             if item.get_type() == ebooklib.ITEM_COVER:
+    |                                   ^^^^^^^^
+275 |                 cover_data = item.get_content()
+276 |                 content_type = item.media_type or "image/jpeg"
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> app/tasks/book_tasks.py:297:5
+    |
+295 |   def _update_book_status(book_id: str, status: str, error: str | None = None) -> None:
+296 |       """更新书籍处理状态"""
+297 | /     from sqlalchemy import create_engine, text
+298 | |     from app.core.config import settings
+    | |________________________________________^
+299 |
+300 |       sync_url = settings.database.sync_database_url
+    |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> app/tasks/book_tasks.py:319:5
+    |
+317 |   def _update_book_processing_complete(book_id: str, meta: dict) -> None:
+318 |       """更新书籍处理完成状态"""
+319 | /     from sqlalchemy import create_engine, text
+320 | |     from app.core.config import settings
+    | |________________________________________^
+321 |
+322 |       sync_url = settings.database.sync_database_url
+    |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> app/tasks/book_tasks.py:344:5
+    |
+342 |   def _update_book_cover(book_id: str, cover_key: str) -> None:
+343 |       """更新书籍封面"""
+344 | /     from sqlalchemy import create_engine, text
+345 | |     from app.core.config import settings
+    | |________________________________________^
+346 |
+347 |       sync_url = settings.database.sync_database_url
+    |
+help: Organize imports
+
+F401 [*] `datetime.datetime` imported but unused
+ --> app/tasks/cleanup_tasks.py:7:22
+  |
+5 | """
+6 |
+7 | from datetime import datetime, timedelta, timezone
+  |                      ^^^^^^^^
+8 |
+9 | import structlog
+  |
+help: Remove unused import
+
+F401 [*] `datetime.timedelta` imported but unused
+ --> app/tasks/cleanup_tasks.py:7:32
+  |
+5 | """
+6 |
+7 | from datetime import datetime, timedelta, timezone
+  |                                ^^^^^^^^^
+8 |
+9 | import structlog
+  |
+help: Remove unused import
+
+F401 [*] `datetime.timezone` imported but unused
+ --> app/tasks/cleanup_tasks.py:7:43
+  |
+5 | """
+6 |
+7 | from datetime import datetime, timedelta, timezone
+  |                                           ^^^^^^^^
+8 |
+9 | import structlog
+  |
+help: Remove unused import
+
+F401 [*] `os` imported but unused
+  --> app/tasks/ocr_tasks.py:8:8
+   |
+ 6 | """
+ 7 |
+ 8 | import os
+   |        ^^
+ 9 | import subprocess
+10 | import tempfile
+   |
+help: Remove unused import: `os`
+
+ARG001 Unused function argument: `self`
+  --> app/tasks/ocr_tasks.py:30:5
+   |
+28 | )
+29 | def process_ocr(
+30 |     self,
+   |     ^^^^
+31 |     book_id: str,
+32 |     user_id: str,
+   |
+
+ARG001 Unused function argument: `user_id`
+  --> app/tasks/ocr_tasks.py:32:5
+   |
+30 |     self,
+31 |     book_id: str,
+32 |     user_id: str,
+   |     ^^^^^^^
+33 |     minio_key: str,
+34 |     sha256: str,
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> app/tasks/ocr_tasks.py:190:5
+    |
+188 |       """更新书籍处理状态"""
+189 |       # 使用同步数据库连接（Celery 任务中）
+190 | /     from sqlalchemy import create_engine, text
+191 | |     from app.core.config import settings
+    | |________________________________________^
+192 |
+193 |       # 创建同步引擎
+    |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> app/tasks/ocr_tasks.py:213:5
+    |
+211 |   def _update_book_ocr_complete(book_id: str, ocr_pdf_key: str) -> None:
+212 |       """更新书籍 OCR 完成状态"""
+213 | /     from sqlalchemy import create_engine, text
+214 | |     from app.core.config import settings
+    | |________________________________________^
+215 |
+216 |       sync_url = settings.database.sync_database_url
+    |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests/conftest.py:7:1
+   |
+ 5 |   """
+ 6 |
+ 7 | / import asyncio
+ 8 | | from typing import AsyncGenerator, Generator
+ 9 | |
+10 | | import pytest
+11 | | import pytest_asyncio
+12 | | from httpx import ASGITransport, AsyncClient
+13 | | from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+14 | | from sqlalchemy.orm import sessionmaker
+15 | | from sqlalchemy.pool import StaticPool
+16 | |
+17 | | from app.core.config import settings
+18 | | from app.core.database import get_db_session
+19 | | from app.main import app
+20 | | from app.models.base import Base
+   | |________________________________^
+   |
+help: Organize imports
+
+UP035 [*] Import from `collections.abc` instead: `AsyncGenerator`, `Generator`
+  --> tests/conftest.py:8:1
+   |
+ 7 | import asyncio
+ 8 | from typing import AsyncGenerator, Generator
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 9 |
+10 | import pytest
+   |
+help: Import from `collections.abc`
+
+F401 [*] `app.core.config.settings` imported but unused
+  --> tests/conftest.py:17:29
+   |
+15 | from sqlalchemy.pool import StaticPool
+16 |
+17 | from app.core.config import settings
+   |                             ^^^^^^^^
+18 | from app.core.database import get_db_session
+19 | from app.main import app
+   |
+help: Remove unused import: `app.core.config.settings`
+
+Found 167 errors.
+[*] 135 fixable with the `--fix` option (19 hidden fixes can be enabled with the `--unsafe-fixes` option).
+Error: Process completed with exit code 1.

@@ -6,7 +6,7 @@ Create Date: 2024-01-01 00:00:00.000000
 
 创建所有初始表结构。
 """
-from typing import Sequence, Union
+from typing import Sequence
 
 from alembic import op
 import sqlalchemy as sa
@@ -14,9 +14,9 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision: str = '001'
-down_revision: Union[str, None] = None
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = None
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
@@ -66,6 +66,68 @@ def upgrade() -> None:
     )
     op.create_index('ix_user_sessions_user_id', 'user_sessions', ['user_id'])
     op.create_index('ix_user_sessions_expires_at', 'user_sessions', ['expires_at'])
+
+    # ==========================================================================
+    # 辅助函数
+    # ==========================================================================
+    op.execute('''
+        CREATE OR REPLACE FUNCTION current_user_id()
+        RETURNS UUID AS $$
+        BEGIN
+            RETURN NULLIF(current_setting('app.current_user_id', TRUE), '')::UUID;
+        END;
+        $$ language 'plpgsql';
+    ''')
+
+    op.execute('''
+        CREATE OR REPLACE FUNCTION set_current_user_id(user_id UUID)
+        RETURNS VOID AS $$
+        BEGIN
+            PERFORM set_config('app.current_user_id', user_id::TEXT, FALSE);
+        END;
+        $$ language 'plpgsql';
+    ''')
+
+    op.execute('''
+        CREATE OR REPLACE FUNCTION update_updated_at_column()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            NEW.updated_at = NOW();
+            RETURN NEW;
+        END;
+        $$ language 'plpgsql';
+    ''')
+
+    op.execute('''
+        CREATE OR REPLACE FUNCTION increment_version()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            NEW.version = OLD.version + 1;
+            RETURN NEW;
+        END;
+        $$ language 'plpgsql';
+    ''')
+
+    op.execute('''
+        CREATE OR REPLACE FUNCTION lww_update()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            IF NEW.updated_at < OLD.updated_at THEN
+                RETURN NULL;
+            END IF;
+            RETURN NEW;
+        END;
+        $$ language 'plpgsql';
+    ''')
+
+    op.execute('''
+        CREATE OR REPLACE FUNCTION detect_conflict()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            RETURN NEW;
+        END;
+        $$ language 'plpgsql';
+    ''')
 
     # ==========================================================================
     # books 表

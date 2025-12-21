@@ -39,7 +39,7 @@ logger = structlog.get_logger()
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     """应用生命周期管理"""
     # 启动时
     logger.info("Starting Athena API", env=settings.app.app_env)
@@ -79,7 +79,7 @@ def create_app() -> FastAPI:
     # 注册异常处理器
     @app.exception_handler(AthenaException)
     async def athena_exception_handler(
-        request: Request, exc: AthenaException
+        _request: Request, exc: AthenaException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code,
