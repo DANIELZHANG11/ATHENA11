@@ -271,7 +271,7 @@ class InviteService:
             user_id=str(invite.inviter_id),
             amount=reward_per_invite,
             transaction_type="invite_reward",
-            description=f"邀请奖励：邀请新用户",
+            description="邀请奖励：邀请新用户",
             reference_type="invite",
             reference_id=str(invite.id),
         )

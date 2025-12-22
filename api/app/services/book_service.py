@@ -503,7 +503,6 @@ class BookService:
         from app.core.exceptions import (
             AlreadyDigitalizedException,
             OcrInProgressException,
-            OcrQuotaExceededException,
         )
         from app.models.system import OcrJob
 

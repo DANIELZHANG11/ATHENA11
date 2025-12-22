@@ -19,7 +19,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.ext.compiler import compiles
-from sqlalchemy.pool import StaticPool
+from sqlalchemy.pool import NullPool, StaticPool
 
 from app.core.database import get_db_session
 from app.main import app
@@ -48,7 +48,7 @@ if "sqlite" in TEST_DATABASE_URL:
         return "TEXT"
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture(scope="session", loop_scope="session")
 async def test_engine() -> AsyncGenerator[AsyncEngine, None]:
     """创建测试数据库引擎"""
     # 根据数据库类型设置不同的连接参数
@@ -60,9 +60,10 @@ async def test_engine() -> AsyncGenerator[AsyncEngine, None]:
             poolclass=StaticPool,
         )
     else:
+        # 使用 NullPool 避免事件循环问题
         engine = create_async_engine(
             TEST_DATABASE_URL,
-            pool_pre_ping=True,
+            poolclass=NullPool,
         )
 
     async with engine.begin() as conn:
@@ -73,7 +74,7 @@ async def test_engine() -> AsyncGenerator[AsyncEngine, None]:
     await engine.dispose()
 
 
-@pytest_asyncio.fixture
+@pytest_asyncio.fixture(loop_scope="session")
 async def db_session(test_engine: AsyncEngine) -> AsyncGenerator[AsyncSession, None]:
     """创建测试数据库会话"""
     session_factory = async_sessionmaker(
@@ -87,7 +88,7 @@ async def db_session(test_engine: AsyncEngine) -> AsyncGenerator[AsyncSession, N
         await session.rollback()
 
 
-@pytest_asyncio.fixture
+@pytest_asyncio.fixture(loop_scope="session")
 async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
     """创建测试客户端"""
 

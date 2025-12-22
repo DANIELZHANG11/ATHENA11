@@ -22,6 +22,7 @@ from app.models.billing import (
     CreditLedger,
     CreditProduct,
     PaymentSession,
+    PricingRule,
 )
 from app.models.user import User
 
@@ -381,11 +382,11 @@ class BillingService:
     async def verify_apple_iap(
         self,
         user_id: str,
-        transaction_id: str,
-        original_transaction_id: str,
-        signed_payload: str,
+        _transaction_id: str,
+        _original_transaction_id: str,
+        _signed_payload: str,
         product_id: str,
-        environment: str,
+        _environment: str,
     ) -> dict[str, Any]:
         """
         验证 Apple App Store 内购凭证
@@ -421,9 +422,9 @@ class BillingService:
     async def verify_google_iap(
         self,
         user_id: str,
-        purchase_token: str,
+        _purchase_token: str,
         product_id: str,
-        package_name: str,
+        _package_name: str,
         is_subscription: bool,
     ) -> dict[str, Any]:
         """

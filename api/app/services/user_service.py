@@ -14,7 +14,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.exceptions import (
     AthenaException,
     ErrorCode,
-    ForbiddenException,
     NotFoundException,
 )
 from app.models.book import Book, ShelfBook
@@ -35,8 +34,8 @@ class UserService:
         self,
         user_id: str,
         confirm_header: str | None,
-        reason: str | None = None,
-        feedback: str | None = None,
+        _reason: str | None = None,
+        _feedback: str | None = None,
     ) -> dict[str, Any]:
         """
         注销账号
