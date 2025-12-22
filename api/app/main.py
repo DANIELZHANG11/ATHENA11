@@ -60,9 +60,9 @@ def create_app() -> FastAPI:
         title="雅典娜 API",
         description="App-First 阅读应用后端 API",
         version="0.1.0",
-        docs_url="/docs" if settings.app.debug else None,
-        redoc_url="/redoc" if settings.app.debug else None,
-        openapi_url="/openapi.json" if settings.app.debug else None,
+        docs_url="/docs" if settings.app.enable_docs else None,
+        redoc_url="/redoc" if settings.app.enable_docs else None,
+        openapi_url="/openapi.json" if settings.app.enable_docs else None,
         lifespan=lifespan,
     )
 
@@ -123,7 +123,7 @@ def create_app() -> FastAPI:
         return {
             "name": "Athena API",
             "version": "0.1.0",
-            "docs": "/docs" if settings.app.debug else "disabled",
+            "docs": "/docs" if settings.app.enable_docs else "disabled",
         }
 
     return app

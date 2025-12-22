@@ -249,11 +249,16 @@ services:
       <<: *common-env
       APP_ENV: production
       DEBUG: "false"
+      # 启用 API 文档（开发调试用）
+      ENABLE_DOCS: ${ENABLE_DOCS:-true}
       # 通过 PgBouncer 连接
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@pgbouncer:5432/${POSTGRES_DB:-athena}
       # Alembic 迁移需要直连
       SYNC_DATABASE_URL: postgresql://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-athena}
+      # MinIO 内部端点（容器间通信）
       MINIO_ENDPOINT: minio:9000
+      # MinIO 外部端点（生成预签名 URL 用）
+      MINIO_EXTERNAL_ENDPOINT: ${MINIO_EXTERNAL_ENDPOINT:-192.168.0.122:49000}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_SECURE: "false"
@@ -261,7 +266,9 @@ services:
       CELERY_RESULT_BACKEND: redis://valkey:6379/1
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       POWERSYNC_URL: http://powersync:8080
-      CORS_ORIGINS: ${CORS_ORIGINS}
+      # CORS 和前端 URL
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://192.168.0.122:48173,http://localhost:48173}
+      FRONTEND_URL: ${FRONTEND_URL:-http://192.168.0.122:48173}
     ports:
       - "${API_PORT:-48000}:8000"
     depends_on:
@@ -287,7 +294,6 @@ services:
           memory: 2G
         reservations:
           memory: 512M
-
   # ==========================================================================
   # Celery Worker 队列
   # ==========================================================================
@@ -307,6 +313,7 @@ services:
       APP_ENV: production
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@pgbouncer:5432/${POSTGRES_DB:-athena}
       MINIO_ENDPOINT: minio:9000
+      MINIO_EXTERNAL_ENDPOINT: ${MINIO_EXTERNAL_ENDPOINT:-192.168.0.122:49000}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_SECURE: "false"
@@ -351,6 +358,7 @@ services:
       APP_ENV: production
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@pgbouncer:5432/${POSTGRES_DB:-athena}
       MINIO_ENDPOINT: minio:9000
+      MINIO_EXTERNAL_ENDPOINT: ${MINIO_EXTERNAL_ENDPOINT:-192.168.0.122:49000}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_SECURE: "false"

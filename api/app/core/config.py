@@ -26,6 +26,8 @@ class AppSettings(BaseSettings):
     app_env: Literal["development", "staging", "production"] = "development"
     debug: bool = True
     log_level: str = "DEBUG"
+    # 独立控制 API 文档是否可访问（方便开发调试）
+    enable_docs: bool = True
 
     # API 服务
     api_host: str = "0.0.0.0"
@@ -84,6 +86,8 @@ class MinioSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     minio_endpoint: str = "localhost:48333"
+    # 外部访问地址（用于生成预签名 URL，浏览器可访问）
+    minio_external_endpoint: str = ""
     minio_access_key: str = "athena_access_key"
     minio_secret_key: str = "athena_secret_key"
     minio_secure: bool = False
@@ -96,6 +100,14 @@ class MinioSettings(BaseSettings):
     def minio_url(self) -> str:
         protocol = "https" if self.minio_secure else "http"
         return f"{protocol}://{self.minio_endpoint}"
+
+    @computed_field
+    @property
+    def minio_external_url(self) -> str:
+        """获取外部访问 URL，如果未配置则使用内部地址"""
+        endpoint = self.minio_external_endpoint or self.minio_endpoint
+        protocol = "https" if self.minio_secure else "http"
+        return f"{protocol}://{endpoint}"
 
 
 class AuthSettings(BaseSettings):

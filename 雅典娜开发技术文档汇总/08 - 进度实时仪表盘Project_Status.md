@@ -52,6 +52,64 @@
 
 ## 📝 AI 编码变更日志
 
+### 🔧 变更 #012 - 局域网开发环境适配：5 大隐患修复
+| 属性 | 值 |
+|------|-----|
+| **日期时间** | 2025-12-22 16:30 |
+| **变更类型** | 配置修复 / 环境适配 |
+| **触发来源** | 用户请求 - 局域网开发环境问题排查 |
+| **影响模块** | MinIO, CORS, API Docs, OCR, Deploy |
+| **破坏性变更** | 否 |
+
+#### 📄 变更摘要
+针对局域网开发环境（服务器 IP: 192.168.0.122）全面修复 5 个潜在问题：
+
+**1. MinIO 预签名 URL 局域网访问性**
+- 问题：预签名 URL 使用 `minio:9000` 内部地址，浏览器无法解析
+- 修复：添加 `MINIO_EXTERNAL_ENDPOINT` 配置，storage_service.py 使用外部客户端生成 URL
+
+**2. 邮件与前端回调链接配置**
+- 问题：`FRONTEND_URL` 默认 localhost，邮件链接无法在其他设备打开
+- 修复：配置 `FRONTEND_URL=http://192.168.0.122:48173`，更新 CORS 白名单
+
+**3. 生产模式下 Swagger 文档访问**
+- 问题：`DEBUG=false` 时 `/docs` 不可用
+- 修复：添加独立 `ENABLE_DOCS` 配置，与 DEBUG 解耦
+
+**4. OCR GPU 依赖确认**
+- 问题：requirements-ocr.txt 使用 CPU 版本 paddlepaddle
+- 修复：改为 `paddlepaddle-gpu>=2.6.0`，启用 GPU 加速
+
+**5. deploy.sh 更新逻辑漏洞**
+- 问题：`update_deployment` 只更新 api 容器
+- 修复：现在更新所有后端服务（api + 6 个 celery worker）
+
+#### 📁 修改文件清单
+
+| 文件路径 | 操作 | 变更说明 |
+|----------|------|----------|
+| `api/app/core/config.py` | 修改 | 添加 `minio_external_endpoint`, `enable_docs` 配置 |
+| `api/app/main.py` | 修改 | 使用 `enable_docs` 控制文档访问 |
+| `api/app/services/storage_service.py` | 修改 | 使用外部客户端生成预签名 URL |
+| `api/docker-compose.prod.yml` | 修改 | 添加 MINIO_EXTERNAL_ENDPOINT, ENABLE_DOCS, FRONTEND_URL 环境变量 |
+| `api/requirements-ocr.txt` | 修改 | 启用 paddlepaddle-gpu |
+| `api/deploy.sh` | 修改 | update_deployment 更新所有后端服务 |
+| `api/.env.production` | 修改 | 添加局域网配置段 |
+
+#### 🔗 关联变更
+- 数据库迁移：否
+- API 变更：否
+- 配置变更：是（需要重启容器生效）
+- 依赖变更：是（OCR 镜像需重新构建）
+
+#### ⚠️ 待人工确认
+- [ ] 运行 `docker compose -f docker-compose.prod.yml up -d` 重启服务
+- [ ] 访问 `http://192.168.0.122:48000/docs` 验证 Swagger 可用
+- [ ] 测试文件上传功能验证 MinIO 预签名 URL 正常
+- [ ] 如需 OCR GPU 加速，需重新构建 OCR 镜像
+
+---
+
 ### 🔧 变更 #011 - CI 验证修复：Lint 错误 + 测试事件循环问题
 | 属性 | 值 |
 |------|-----|

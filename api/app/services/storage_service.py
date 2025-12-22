@@ -18,12 +18,24 @@ class StorageService:
     """MinIO 存储服务"""
 
     def __init__(self):
+        # 内部客户端：用于实际操作存储
         self.client = Minio(
             endpoint=settings.minio.minio_endpoint,
             access_key=settings.minio.minio_access_key,
             secret_key=settings.minio.minio_secret_key,
             secure=settings.minio.minio_secure,
         )
+
+        # 外部客户端：用于生成对外的预签名 URL
+        # 如果配置了外部端点，使用外部端点生成 URL
+        external_endpoint = settings.minio.minio_external_endpoint or settings.minio.minio_endpoint
+        self.external_client = Minio(
+            endpoint=external_endpoint,
+            access_key=settings.minio.minio_access_key,
+            secret_key=settings.minio.minio_secret_key,
+            secure=settings.minio.minio_secure,
+        )
+
         self._ensure_buckets()
 
     def _ensure_buckets(self) -> None:
@@ -60,8 +72,8 @@ class StorageService:
         ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
         object_key = f"{user_id}/{uuid.uuid4()}.{ext}" if ext else f"{user_id}/{uuid.uuid4()}"
 
-        # 生成预签名 URL
-        url = self.client.presigned_put_object(
+        # 使用外部客户端生成预签名 URL（浏览器可访问）
+        url = self.external_client.presigned_put_object(
             bucket_name=settings.minio.minio_bucket_books,
             object_name=object_key,
             expires=expires,
@@ -95,7 +107,8 @@ class StorageService:
         if filename:
             response_headers["response-content-disposition"] = f'attachment; filename="{filename}"'
 
-        return self.client.presigned_get_object(
+        # 使用外部客户端生成预签名 URL（浏览器可访问）
+        return self.external_client.presigned_get_object(
             bucket_name=bucket,
             object_name=object_key,
             expires=expires,

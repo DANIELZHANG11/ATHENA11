@@ -171,13 +171,28 @@ update_deployment() {
     # 重新构建镜像
     build_images
     
-    # 滚动更新
+    # 定义所有依赖后端镜像的服务
+    BACKEND_SERVICES="api celery-worker celery-beat celery-conversion-worker celery-metadata-worker celery-indexing-worker celery-ocr-worker"
+    
+    # 滚动更新所有后端服务
     cd "$PROJECT_DIR"
-    docker compose -f "$COMPOSE_FILE" up -d --no-deps --build api
+    log_info "滚动更新后端服务: $BACKEND_SERVICES"
+    for service in $BACKEND_SERVICES; do
+        log_info "更新服务: $service"
+        docker compose -f "$COMPOSE_FILE" up -d --no-deps --force-recreate "$service" || log_warn "服务 $service 不存在或更新失败"
+    done
+    
+    # 等待服务启动
+    log_info "等待服务启动..."
+    sleep 10
     
     # 运行数据库迁移
     log_info "运行数据库迁移..."
-    docker compose -f "$COMPOSE_FILE" exec api alembic upgrade head
+    docker compose -f "$COMPOSE_FILE" exec -T api alembic upgrade head
+    
+    # 显示服务状态
+    log_info "服务状态:"
+    docker compose -f "$COMPOSE_FILE" ps
     
     log_info "更新完成"
 }

@@ -8,9 +8,12 @@ pdfminer.six>=20221105
 # EPUB 处理
 ebooklib>=0.18
 
-# PaddleOCR (可选，较大)
-# paddleocr>=2.7.0
-# paddlepaddle>=2.5.0
+# PaddleOCR GPU 版本
+# 注意: paddlepaddle-gpu 需要匹配 CUDA 版本
+# CUDA 11.8: paddlepaddle-gpu==2.6.0.post118
+# CUDA 12.0: paddlepaddle-gpu==2.6.0.post120
+paddlepaddle-gpu>=2.6.0
+paddleocr>=2.7.0
 
-# OCRmyPDF 插件
-# ocrmypdf-paddleocr>=0.1.0
+# OCRmyPDF 增强
+ocrmypdf>=16.0.0
