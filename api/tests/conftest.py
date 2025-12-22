@@ -48,7 +48,7 @@ if "sqlite" in TEST_DATABASE_URL:
         return "TEXT"
 
 
-@pytest_asyncio.fixture(scope="session", loop_scope="session")
+@pytest_asyncio.fixture
 async def test_engine() -> AsyncGenerator[AsyncEngine, None]:
     """创建测试数据库引擎"""
     # 根据数据库类型设置不同的连接参数
@@ -74,7 +74,7 @@ async def test_engine() -> AsyncGenerator[AsyncEngine, None]:
     await engine.dispose()
 
 
-@pytest_asyncio.fixture(loop_scope="session")
+@pytest_asyncio.fixture
 async def db_session(test_engine: AsyncEngine) -> AsyncGenerator[AsyncSession, None]:
     """创建测试数据库会话"""
     session_factory = async_sessionmaker(
@@ -88,7 +88,7 @@ async def db_session(test_engine: AsyncEngine) -> AsyncGenerator[AsyncSession, N
         await session.rollback()
 
 
-@pytest_asyncio.fixture(loop_scope="session")
+@pytest_asyncio.fixture
 async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
     """创建测试客户端"""
 
