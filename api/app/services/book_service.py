@@ -470,3 +470,193 @@ class BookService:
 
         # 删除书籍记录
         await self.db.delete(book)
+
+    # ========================================================================
+    # OCR 相关
+    # ========================================================================
+
+    async def trigger_ocr(
+        self,
+        book_id: str,
+        user_id: str,
+        priority: str = "normal",
+        force: bool = False,
+    ) -> dict[str, Any]:
+        """
+        触发 OCR 处理
+
+        Args:
+            book_id: 书籍 ID
+            user_id: 用户 ID
+            priority: 优先级 (normal/high)
+            force: 是否强制重新 OCR
+
+        Returns:
+            {
+                "status": "queued" | "instant_completed" | "already_processing",
+                "queue_position": int | None,
+                "estimated_minutes": int | None,
+            }
+        """
+        from uuid import UUID
+
+        from app.core.exceptions import (
+            AlreadyDigitalizedException,
+            OcrInProgressException,
+            OcrQuotaExceededException,
+        )
+        from app.models.system import OcrJob
+
+        # 获取书籍
+        book = await self.get_book(book_id, user_id)
+
+        # 检查是否已是文字型
+        if book.has_text_layer and not force:
+            raise AlreadyDigitalizedException()
+
+        # 检查是否正在处理
+        if book.ocr_status == "processing":
+            raise OcrInProgressException()
+
+        # 检查配额
+        await self._check_ocr_quota(user_id)
+
+        # 检查是否可复用 (假 OCR)
+        if book.content_sha256:
+            existing_ocr = await self._find_existing_ocr(book.content_sha256)
+            if existing_ocr and not force:
+                # 直接复用 OCR 结果
+                book.ocr_pdf_key = existing_ocr["ocr_pdf_key"]
+                book.has_text_layer = True
+                book.ocr_status = "completed"
+                book.is_interactive = True
+                await self.db.commit()
+
+                # 扣减配额 (即使复用也扣)
+                await self._deduct_ocr_quota(user_id)
+
+                return {
+                    "status": "instant_completed",
+                    "ocr_result_key": existing_ocr["ocr_pdf_key"],
+                    "message": "OCR 结果已复用，处理完成。",
+                }
+
+        # 创建 OCR 任务
+        ocr_job = OcrJob(
+            book_id=UUID(book_id),
+            user_id=UUID(user_id),
+            status="pending",
+            priority=1 if priority == "high" else 0,
+        )
+        self.db.add(ocr_job)
+
+        # 更新书籍状态
+        book.ocr_status = "pending"
+        await self.db.commit()
+
+        # 提交 Celery 任务
+        from app.tasks.ocr_tasks import process_ocr
+
+        process_ocr.delay(
+            book_id=book_id,
+            user_id=user_id,
+            minio_key=book.minio_key,
+            sha256=book.content_sha256 or "",
+        )
+
+        # 计算队列位置
+        queue_position = await self._get_ocr_queue_position(book_id)
+
+        return {
+            "status": "queued",
+            "queue_position": queue_position,
+            "estimated_minutes": queue_position * 5,  # 估算每本 5 分钟
+            "message": f"OCR 任务已进入排队，预计 {queue_position * 5} 分钟后完成。",
+        }
+
+    async def get_ocr_status(self, book_id: str, user_id: str) -> dict[str, Any]:
+        """获取 OCR 处理状态"""
+        from app.models.system import OcrJob
+
+        book = await self.get_book(book_id, user_id)
+
+        # 查询 OCR 任务
+        result = await self.db.execute(
+            select(OcrJob)
+            .where(OcrJob.book_id == book.id)
+            .order_by(OcrJob.created_at.desc())
+            .limit(1)
+        )
+        ocr_job = result.scalar_one_or_none()
+
+        return {
+            "book_id": book_id,
+            "is_digitalized": book.has_text_layer,
+            "ocr_status": book.ocr_status,
+            "queue_position": await self._get_ocr_queue_position(book_id) if book.ocr_status == "pending" else None,
+            "estimated_minutes": None,
+            "completed_at": ocr_job.completed_at if ocr_job else None,
+            "error_message": ocr_job.error_message if ocr_job and ocr_job.status == "failed" else None,
+        }
+
+    async def _check_ocr_quota(self, user_id: str) -> None:
+        """检查 OCR 配额"""
+        from uuid import UUID
+
+        from app.core.exceptions import OcrQuotaExceededException
+        from app.models.user import User
+
+        result = await self.db.execute(select(User).where(User.id == UUID(user_id)))
+        user = result.scalar_one_or_none()
+
+        if not user:
+            raise OcrQuotaExceededException()
+
+        # 免费用户每月 3 次
+        monthly_limit = 3 if user.membership_tier == "FREE" else 100
+
+        if user.free_ocr_usage >= monthly_limit:
+            raise OcrQuotaExceededException()
+
+    async def _deduct_ocr_quota(self, user_id: str) -> None:
+        """扣减 OCR 配额"""
+        from uuid import UUID
+
+        await self.db.execute(
+            update(User)
+            .where(User.id == UUID(user_id))
+            .values(free_ocr_usage=User.free_ocr_usage + 1)
+        )
+
+    async def _find_existing_ocr(self, sha256: str) -> dict[str, Any] | None:
+        """查找已存在的 OCR 结果"""
+        result = await self.db.execute(
+            select(Book)
+            .where(
+                Book.content_sha256 == sha256,
+                Book.ocr_pdf_key.isnot(None),
+            )
+            .limit(1)
+        )
+        book = result.scalar_one_or_none()
+
+        if book:
+            return {"ocr_pdf_key": book.ocr_pdf_key}
+        return None
+
+    async def _get_ocr_queue_position(self, book_id: str) -> int:
+        """获取 OCR 队列位置"""
+        from uuid import UUID
+
+        from app.models.system import OcrJob
+
+        result = await self.db.execute(
+            select(func.count())
+            .select_from(OcrJob)
+            .where(
+                OcrJob.status == "pending",
+                OcrJob.created_at <= select(OcrJob.created_at).where(OcrJob.book_id == UUID(book_id)).scalar_subquery(),
+            )
+        )
+        return result.scalar() or 1
+

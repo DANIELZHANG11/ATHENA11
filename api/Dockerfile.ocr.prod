@@ -1,0 +1,84 @@
+# Dockerfile for Athena OCR Worker - Production
+# 基于中国国内镜像源，GPU 支持，带重试机制
+
+FROM zukubq0aouv2k2.xuanyuan.run/python:3.11-slim
+
+WORKDIR /app
+
+# 环境变量配置
+ENV HF_HOME=/app/.hf_cache \
+    TRANSFORMERS_CACHE=/app/.hf_cache \
+    HUGGINGFACE_HUB_CACHE=/app/.hf_cache
+
+# pip 配置：使用国内镜像 + 增加超时 + 重试
+ENV PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple \
+    PIP_TRUSTED_HOST=pypi.tuna.tsinghua.edu.cn \
+    PIP_DEFAULT_TIMEOUT=300 \
+    PIP_RETRIES=5
+
+# OCR/Embedding GPU 配置
+ENV FLAGS_fraction_of_gpu_memory_to_use=0.4 \
+    OCR_GPU_MEM=3500 \
+    OCR_CPU_THREADS=6 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    TZ=Asia/Shanghai
+
+# 使用国内 Debian 镜像源加速
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debian.sources 2>/dev/null || \
+    sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list 2>/dev/null || true
+
+# 安装系统依赖（适配 Debian Trixie）（带重试机制）
+RUN for i in 1 2 3; do \
+      apt-get update && \
+      apt-get install -y --no-install-recommends --fix-missing \
+        gcc \
+        g++ \
+        libpq-dev \
+        libgl1 \
+        libglib2.0-0 \
+        libgomp1 \
+        curl \
+        tesseract-ocr \
+        tesseract-ocr-chi-sim \
+        tesseract-ocr-chi-tra \
+        tesseract-ocr-eng \
+        ghostscript \
+        unpaper \
+        && rm -rf /var/lib/apt/lists/* && break || \
+      (echo "Retry $i/3 failed, waiting..." && sleep 5); \
+    done
+
+# 升级 pip 并安装基础依赖
+COPY requirements.txt /app/requirements.txt
+COPY requirements-ocr.txt /app/requirements-ocr.txt
+
+RUN for i in 1 2 3; do \
+      pip install --upgrade pip && \
+      pip install --no-cache-dir -r /app/requirements.txt && break || \
+      (echo "Retry $i/3 failed, waiting..." && sleep 10); \
+    done
+
+# 安装 OCR 依赖（PaddlePaddle GPU 版本 + PaddleOCR）
+# 使用 PaddlePaddle 官方源（国内镜像）
+RUN for i in 1 2 3; do \
+      # PaddlePaddle GPU 版本 (CUDA 11.8) - 支持 PP-OCRv5
+      pip install --no-cache-dir paddlepaddle-gpu==3.0.0 \
+        -i https://www.paddlepaddle.org.cn/packages/stable/cu118/ --timeout 300 && \
+      # PaddleOCR 3.x (支持 PP-OCRv5 mobile)
+      pip install --no-cache-dir paddleocr==3.3.2 --timeout 300 && \
+      # OCRmyPDF
+      pip install --no-cache-dir ocrmypdf==16.0.0 --timeout 300 && break || \
+      (echo "Retry $i/3 failed, waiting..." && sleep 10); \
+    done
+
+# 复制应用代码
+COPY app /app/app
+COPY alembic.ini /app/alembic.ini
+COPY alembic /app/alembic
+
+# 健康检查（检查 Celery worker 是否运行）
+HEALTHCHECK --interval=60s --timeout=10s --start-period=120s --retries=3 \
+  CMD celery -A app.tasks.celery_app inspect ping || exit 1
+
+CMD ["celery", "-A", "app.tasks.celery_app", "worker", "--loglevel=info"]

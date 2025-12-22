@@ -60,6 +60,57 @@ from app.api.schemas.note import (
     ShelfResponse,
     ShelfUpdate,
 )
+from app.api.schemas.reading import (
+    BookPositionResponse,
+    BookPositionUpdate,
+    BookReadingProgress,
+    DailyReadingStats,
+    MonthlyReadingStats,
+    ReadingHistoryItem,
+    ReadingHistoryResponse,
+    ReadingStatsResponse,
+    ReadingTimeLogCreate,
+    ReadingTimeLogResponse,
+    ReadingTimeLogUpdate,
+    RecentBooksResponse,
+    WeeklyReadingStats,
+)
+from app.api.schemas.billing import (
+    AppleIAPVerifyRequest,
+    CheckoutRequest,
+    CheckoutResponse,
+    CreditBalanceResponse,
+    CreditProductListResponse,
+    CreditProductResponse,
+    GoogleIAPVerifyRequest,
+    IAPVerifyResponse,
+    PaymentHistoryItem,
+    PaymentHistoryResponse,
+    PlanListResponse,
+    PlanResponse,
+    SubscriptionResponse,
+)
+from app.api.schemas.invite import (
+    InviteCodeResponse,
+    InviteeItem,
+    InviteeListResponse,
+    InviteRewardRule,
+    InviteRulesResponse,
+    InviteStatsResponse,
+)
+from app.api.schemas.export import (
+    ExportBook,
+    ExportHighlight,
+    ExportNote,
+    ExportSummary,
+    NotesExportResponse,
+)
+from app.api.schemas.user import (
+    AccountDeleteRequest,
+    AccountDeleteResponse,
+    NotificationSettingsResponse,
+    NotificationSettingsUpdate,
+)
 
 __all__ = [
     # AI
@@ -114,4 +165,50 @@ __all__ = [
     "ShelfListResponse",
     "ShelfResponse",
     "ShelfUpdate",
+    # Reading
+    "BookPositionResponse",
+    "BookPositionUpdate",
+    "BookReadingProgress",
+    "DailyReadingStats",
+    "MonthlyReadingStats",
+    "ReadingHistoryItem",
+    "ReadingHistoryResponse",
+    "ReadingStatsResponse",
+    "ReadingTimeLogCreate",
+    "ReadingTimeLogResponse",
+    "ReadingTimeLogUpdate",
+    "RecentBooksResponse",
+    "WeeklyReadingStats",
+    # Billing
+    "AppleIAPVerifyRequest",
+    "CheckoutRequest",
+    "CheckoutResponse",
+    "CreditBalanceResponse",
+    "CreditProductListResponse",
+    "CreditProductResponse",
+    "GoogleIAPVerifyRequest",
+    "IAPVerifyResponse",
+    "PaymentHistoryItem",
+    "PaymentHistoryResponse",
+    "PlanListResponse",
+    "PlanResponse",
+    "SubscriptionResponse",
+    # Invite
+    "InviteCodeResponse",
+    "InviteeItem",
+    "InviteeListResponse",
+    "InviteRewardRule",
+    "InviteRulesResponse",
+    "InviteStatsResponse",
+    # Export
+    "ExportBook",
+    "ExportHighlight",
+    "ExportNote",
+    "ExportSummary",
+    "NotesExportResponse",
+    # User
+    "AccountDeleteRequest",
+    "AccountDeleteResponse",
+    "NotificationSettingsResponse",
+    "NotificationSettingsUpdate",
 ]

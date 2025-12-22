@@ -359,23 +359,19 @@ def upgrade() -> None:
     # ==========================================================================
     # document_vectors 表
     # ==========================================================================
-    op.create_table(
-        'document_vectors',
-        sa.Column('id', postgresql.UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()')),
-        sa.Column('book_id', postgresql.UUID(as_uuid=True), sa.ForeignKey('books.id', ondelete='CASCADE'), nullable=False),
-        sa.Column('chunk_index', sa.Integer, nullable=False),
-        sa.Column('content', sa.Text, nullable=False),
-        sa.Column('embedding', sa.LargeBinary, nullable=False),  # vector(1536)
-        sa.Column('metadata', postgresql.JSONB, server_default='{}'),
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('NOW()')),
-    )
-    op.create_index('ix_document_vectors_book_id', 'document_vectors', ['book_id'])
-    # 向量索引需要单独创建
     op.execute('''
-        ALTER TABLE document_vectors
-        ALTER COLUMN embedding TYPE vector(1536)
-        USING embedding::vector(1536)
+        CREATE TABLE document_vectors (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            book_id UUID NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+            chunk_index INTEGER NOT NULL,
+            content TEXT NOT NULL,
+            embedding vector(1536) NOT NULL,
+            metadata JSONB DEFAULT '{}',
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+        )
     ''')
+    op.create_index('ix_document_vectors_book_id', 'document_vectors', ['book_id'])
+    # 向量索引
     op.execute('''
         CREATE INDEX ix_document_vectors_embedding
         ON document_vectors
@@ -483,7 +479,14 @@ def upgrade() -> None:
     # ==========================================================================
     # 创建 PowerSync 发布
     # ==========================================================================
-    op.execute('CREATE PUBLICATION IF NOT EXISTS athena_publication FOR ALL TABLES')
+    op.execute('''
+        DO $$
+        BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'athena_publication') THEN
+                CREATE PUBLICATION athena_publication FOR ALL TABLES;
+            END IF;
+        END $$
+    ''')
 
 
 def downgrade() -> None:

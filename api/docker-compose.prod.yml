@@ -1,0 +1,665 @@
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# 服务器配置:
+#   - CPU: Intel Xeon E5-2680 v4 (14核28线程)
+#   - 内存: 64GB DDR4 ECC
+#   - GPU: NVIDIA RTX 3060 12GB (OCR + Embedding 专用)
+#   - 存储: SSD 480GB + HDD 5.5TB (bcache)
+
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "50m"
+    max-file: "5"
+    compress: "true"
+
+x-common-env: &common-env
+  TZ: Asia/Shanghai
+  LANG: zh_CN.UTF-8
+
+x-restart-policy: &restart-policy
+  restart: unless-stopped
+  deploy:
+    restart_policy:
+      condition: on-failure
+      delay: 5s
+      max_attempts: 3
+      window: 120s
+
+services:
+  # ==========================================================================
+  # 数据库层
+  # ==========================================================================
+  postgres:
+    image: zukubq0aouv2k2.xuanyuan.run/pgvector/pgvector:pg16
+    container_name: athena-postgres
+    <<: *restart-policy
+    environment:
+      <<: *common-env
+      POSTGRES_USER: ${POSTGRES_USER:-athena}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-athena}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+    ports:
+      - "${POSTGRES_PORT:-45432}:5432"
+    volumes:
+      - /home/vitiana/Athena/data_ssd/pg_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+    networks:
+      athena-network:
+        ipv4_address: 172.20.0.10
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-athena}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=4GB
+      -c effective_cache_size=12GB
+      -c maintenance_work_mem=1GB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=10MB
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
+      -c max_worker_processes=14
+      -c max_parallel_workers_per_gather=4
+      -c max_parallel_workers=14
+      -c max_parallel_maintenance_workers=4
+      -c wal_level=logical
+      -c max_replication_slots=10
+      -c max_wal_senders=10
+
+  # MongoDB（PowerSync Sync Bucket Storage）
+  # PowerSync 需要 MongoDB 或独立的 PostgreSQL 作为 sync bucket 存储
+  mongo:
+    image: zukubq0aouv2k2.xuanyuan.run/mongo:7.0
+    container_name: athena-mongo
+    <<: *restart-policy
+    environment:
+      <<: *common-env
+    ports:
+      - "47017:27017"
+    volumes:
+      - /data/athena/mongo_data:/data/db
+    networks:
+      athena-network:
+        ipv4_address: 172.20.0.13
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+
+  # MongoDB 副本集初始化（只运行一次）
+  mongo-rs-init:
+    image: zukubq0aouv2k2.xuanyuan.run/mongo:7.0
+    container_name: athena-mongo-init
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - athena-network
+    entrypoint:
+      - bash
+      - -c
+      - 'sleep 5 && mongosh --host mongo:27017 --eval ''try{rs.status().ok && quit(0)} catch {} rs.initiate({_id: "rs0", version: 1, members: [{ _id: 0, host : "mongo:27017" }]})'''
+
+  # PgBouncer 连接池（仅供 API 使用）
+  pgbouncer:
+    image: zukubq0aouv2k2.xuanyuan.run/edoburu/pgbouncer:latest
+    container_name: athena-pgbouncer
+    <<: *restart-policy
+    environment:
+      <<: *common-env
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-athena}"
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 500
+      DEFAULT_POOL_SIZE: 25
+      MIN_POOL_SIZE: 5
+      RESERVE_POOL_SIZE: 5
+      SERVER_IDLE_TIMEOUT: 600
+      MAX_DB_CONNECTIONS: 100
+      # 使用 SCRAM-SHA-256 认证
+      AUTH_TYPE: scram-sha-256
+    ports:
+      - "46432:5432"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - athena-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ==========================================================================
+  # 对象存储层
+  # ==========================================================================
+  minio:
+    image: zukubq0aouv2k2.xuanyuan.run/minio/minio:latest
+    container_name: athena-minio
+    <<: *restart-policy
+    command: server /data --console-address ":9001"
+    environment:
+      <<: *common-env
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+    ports:
+      - "${MINIO_PORT:-49000}:9000"
+      - "${MINIO_CONSOLE_PORT:-49001}:9001"
+    volumes:
+      - /data/athena/minio_data:/data
+    networks:
+      athena-network:
+        ipv4_address: 172.20.0.11
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # MinIO 初始化
+  minio-init:
+    image: zukubq0aouv2k2.xuanyuan.run/minio/mc:latest
+    container_name: athena-minio-init
+    environment:
+      <<: *common-env
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      set -e;
+      echo '开始配置 MinIO...';
+      mc alias set myminio http://minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY};
+      mc mb --ignore-existing myminio/athena-books;
+      mc mb --ignore-existing myminio/athena-covers;
+      mc mb --ignore-existing myminio/athena-temp;
+      mc mb --ignore-existing myminio/athena-ocr;
+      echo 'MinIO 配置完成';
+      "
+    networks:
+      - athena-network
+    logging: *default-logging
+
+  # ==========================================================================
+  # 缓存 & 消息队列
+  # ==========================================================================
+  valkey:
+    image: zukubq0aouv2k2.xuanyuan.run/valkey/valkey:7.2-alpine
+    container_name: athena-valkey
+    <<: *restart-policy
+    environment:
+      <<: *common-env
+    ports:
+      - "${VALKEY_PORT:-46379}:6379"
+    volumes:
+      - /home/vitiana/Athena/data_ssd/valkey_data:/data
+    networks:
+      athena-network:
+        ipv4_address: 172.20.0.12
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: >
+      valkey-server
+      --maxmemory 4gb
+      --maxmemory-policy allkeys-lru
+      --appendonly yes
+      --appendfsync everysec
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+
+  # ==========================================================================
+  # API 服务层
+  # ==========================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        SKIP_HEAVY: "true"
+    image: athena-api:${VERSION:-latest}
+    container_name: athena-api
+    <<: *restart-policy
+    environment:
+      <<: *common-env
+      APP_ENV: production
+      DEBUG: "false"
+      # 通过 PgBouncer 连接
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@pgbouncer:5432/${POSTGRES_DB:-athena}
+      # Alembic 迁移需要直连
+      SYNC_DATABASE_URL: postgresql://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-athena}
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_SECURE: "false"
+      CELERY_BROKER_URL: redis://valkey:6379/0
+      CELERY_RESULT_BACKEND: redis://valkey:6379/1
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      POWERSYNC_URL: http://powersync:8080
+      CORS_ORIGINS: ${CORS_ORIGINS}
+    ports:
+      - "${API_PORT:-48000}:8000"
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      athena-network:
+        ipv4_address: 172.20.0.20
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+
+  # ==========================================================================
+  # Celery Worker 队列
+  # ==========================================================================
+  # 通用任务 Worker
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        SKIP_HEAVY: "true"
+    image: athena-api:${VERSION:-latest}
+    container_name: athena-celery-worker
+    <<: *restart-policy
+    command: celery -A app.tasks.celery_app worker --loglevel=info -Q default,processing --concurrency=4
+    environment:
+      <<: *common-env
+      APP_ENV: production
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@pgbouncer:5432/${POSTGRES_DB:-athena}
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_SECURE: "false"
+      CELERY_BROKER_URL: redis://valkey:6379/0
+      CELERY_RESULT_BACKEND: redis://valkey:6379/1
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - athena-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.tasks.celery_app inspect ping -t 5 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+
+  # Calibre 格式转换 Worker（独立队列）
+  celery-conversion-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        SKIP_HEAVY: "true"
+    image: athena-api:${VERSION:-latest}
+    container_name: athena-celery-conversion
+    <<: *restart-policy
+    command: celery -A app.tasks.celery_app worker --loglevel=info -Q conversion --concurrency=2 --max-tasks-per-child=50
+    environment:
+      <<: *common-env
+      APP_ENV: production
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@pgbouncer:5432/${POSTGRES_DB:-athena}
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_SECURE: "false"
+      CELERY_BROKER_URL: redis://valkey:6379/0
+      CELERY_RESULT_BACKEND: redis://valkey:6379/1
+      CALIBRE_PATH: /usr/bin
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      calibre:
+        condition: service_healthy
+    networks:
+      - athena-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.tasks.celery_app inspect ping -t 5 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '4'
+        reservations:
+          memory: 512M
+
+  # Calibre 元数据提取 Worker（独立队列）
+  celery-metadata-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        SKIP_HEAVY: "true"
+    image: athena-api:${VERSION:-latest}
+    container_name: athena-celery-metadata
+    <<: *restart-policy
+    command: celery -A app.tasks.celery_app worker --loglevel=info -Q metadata --concurrency=4 --max-tasks-per-child=100
+    environment:
+      <<: *common-env
+      APP_ENV: production
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@pgbouncer:5432/${POSTGRES_DB:-athena}
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_SECURE: "false"
+      CELERY_BROKER_URL: redis://valkey:6379/0
+      CELERY_RESULT_BACKEND: redis://valkey:6379/1
+      CALIBRE_PATH: /usr/bin
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      calibre:
+        condition: service_healthy
+    networks:
+      - athena-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.tasks.celery_app inspect ping -t 5 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+
+  # 付费 OCR Worker（GPU 加速，高优先级）
+  # 统一 OCR Worker（GPU 加速）
+  # 使用 Celery 优先级队列：付费用户优先，同级按时间排序
+  # 队列优先级：ocr (priority 0-9, 数字越小优先级越高)
+  # - 付费用户任务: priority=0-3 (高优先级)
+  # - 免费用户任务: priority=6-9 (低优先级)
+  celery-ocr-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.ocr.prod
+    image: athena-ocr:${VERSION:-latest}
+    container_name: athena-celery-ocr
+    <<: *restart-policy
+    # 使用单一 OCR 队列，通过优先级区分付费/免费用户
+    # concurrency=2: 最大化 GPU 利用率（12GB 显存可支持 2 个并发任务）
+    command: celery -A app.tasks.celery_app worker --loglevel=info -Q ocr --concurrency=2 --max-tasks-per-child=20
+    environment:
+      <<: *common-env
+      APP_ENV: production
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@pgbouncer:5432/${POSTGRES_DB:-athena}
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_SECURE: "false"
+      CELERY_BROKER_URL: redis://valkey:6379/0
+      CELERY_RESULT_BACKEND: redis://valkey:6379/1
+      OCR_USE_PADDLE: "true"
+      # GPU 显存分配（12GB 全部用于 OCR）
+      FLAGS_fraction_of_gpu_memory_to_use: "0.85"
+      OCR_GPU_MEM: "10000"
+      OCR_CPU_THREADS: "8"
+      CUDA_VISIBLE_DEVICES: "0"
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - athena-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.tasks.celery_app inspect ping -t 5 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 10G
+        reservations:
+          memory: 4G
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # 向量索引 Worker（CPU 密集型）
+  celery-indexing-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        SKIP_HEAVY: "false"
+    image: athena-embedding:${VERSION:-latest}
+    container_name: athena-celery-indexing
+    <<: *restart-policy
+    command: celery -A app.tasks.celery_app worker --loglevel=info -Q indexing --concurrency=2 --max-tasks-per-child=50
+    environment:
+      <<: *common-env
+      APP_ENV: production
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-athena}:${POSTGRES_PASSWORD}@pgbouncer:5432/${POSTGRES_DB:-athena}
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_SECURE: "false"
+      CELERY_BROKER_URL: redis://valkey:6379/0
+      CELERY_RESULT_BACKEND: redis://valkey:6379/1
+      # HuggingFace 模型缓存
+      HF_HOME: /app/.hf_cache
+      TRANSFORMERS_CACHE: /app/.hf_cache
+    volumes:
+      - /home/vitiana/Athena/data_ssd/hf_cache:/app/.hf_cache
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - athena-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.tasks.celery_app inspect ping -t 5 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '8'
+        reservations:
+          memory: 2G
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        SKIP_HEAVY: "true"
+    image: athena-api:${VERSION:-latest}
+    container_name: athena-celery-beat
+    <<: *restart-policy
+    command: celery -A app.tasks.celery_app beat --loglevel=info
+    environment:
+      <<: *common-env
+      APP_ENV: production
+      CELERY_BROKER_URL: redis://valkey:6379/0
+      CELERY_RESULT_BACKEND: redis://valkey:6379/1
+    depends_on:
+      valkey:
+        condition: service_healthy
+    networks:
+      - athena-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD-SHELL", "cat /proc/1/cmdline | grep -q beat || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # ==========================================================================
+  # 工具服务层
+  # ==========================================================================
+  calibre:
+    image: zukubq0aouv2k2.xuanyuan.run/linuxserver/calibre:latest
+    container_name: athena-calibre
+    <<: *restart-policy
+    environment:
+      <<: *common-env
+      PUID: 1000
+      PGID: 1000
+    ports:
+      - "${CALIBRE_UI_PORT:-48081}:8080"
+      - "${CALIBRE_WEB_PORT:-48082}:8081"
+    volumes:
+      - /data/athena/calibre_config:/config
+      - /data/athena/calibre_books:/books
+    networks:
+      athena-network:
+        ipv4_address: 172.20.0.30
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ==========================================================================
+  # PowerSync 同步服务
+  # ==========================================================================
+  powersync:
+    image: zukubq0aouv2k2.xuanyuan.run/journeyapps/powersync-service:latest
+    container_name: athena-powersync
+    <<: *restart-policy
+    environment:
+      <<: *common-env
+      # PowerSync 环境变量必须以 PS_ 开头
+      # 源数据库连接 - 使用专用 powersync_user 用户
+      PS_DATABASE_URL: postgresql://powersync_user:powersync123@postgres:5432/${POSTGRES_DB:-athena}
+      # MongoDB 用于 sync bucket 存储
+      PS_MONGO_URI: mongodb://mongo:27017/powersync
+      # JWKS URL - 后端提供公钥端点
+      PS_JWKS_URL: http://api:8000/api/v1/powersync/keys
+      # 端口配置
+      PS_PORT: "8080"
+    ports:
+      - "${POWERSYNC_PORT:-48090}:8080"
+      - "49091:9091"
+    volumes:
+      - ./powersync/powersync.yaml:/app/powersync.yaml:ro
+      - ./powersync/sync-rules.yaml:/config/sync-rules.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    networks:
+      athena-network:
+        ipv4_address: 172.20.0.21
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8080/probes/liveness', res => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+
+# ==========================================================================
+# 网络配置
+# ==========================================================================
+networks:
+  athena-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ==========================================================================
+# 数据卷（已映射到宿主机）
+# ==========================================================================
+# 注意：所有卷都已映射到宿主机路径，不使用 Docker 卷

@@ -18,6 +18,8 @@ from app.api.schemas.book import (
     BookMetaResponse,
     BookResponse,
     DedupReferenceRequest,
+    OcrStatusResponse,
+    OcrTriggerRequest,
     UploadCompleteRequest,
     UploadInitRequest,
     UploadInitResponse,
@@ -244,6 +246,59 @@ def _book_to_response(book) -> BookResponse:
         meta=meta,
         created_at=book.created_at,
         updated_at=book.updated_at,
+    )
+
+
+# ============================================================================
+# OCR 处理
+# ============================================================================
+
+
+@router.post("/{book_id}/ocr")
+async def trigger_ocr(
+    book_id: str,
+    current_user: CurrentUser,
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+    request: OcrTriggerRequest | None = None,
+) -> dict:
+    """
+    触发 OCR 处理
+
+    用户主动请求对图片型 PDF 进行 OCR 处理。
+    支持 OCR 复用（假 OCR）以节省计算资源。
+    """
+    service = BookService(db)
+    priority = request.priority if request else "normal"
+    force = request.force if request else False
+
+    result = await service.trigger_ocr(
+        book_id=book_id,
+        user_id=str(current_user.id),
+        priority=priority,
+        force=force,
+    )
+
+    return result
+
+
+@router.get("/{book_id}/ocr/status", response_model=OcrStatusResponse)
+async def get_ocr_status(
+    book_id: str,
+    current_user: CurrentUser,
+    db: Annotated[AsyncSession, Depends(get_db_session)],
+) -> OcrStatusResponse:
+    """获取 OCR 处理状态"""
+    service = BookService(db)
+    status = await service.get_ocr_status(book_id, str(current_user.id))
+
+    return OcrStatusResponse(
+        status=status["ocr_status"] or "none",
+        progress=0,  # TODO: 从任务获取进度
+        total_pages=0,
+        processed_pages=0,
+        error=status["error_message"],
+        started_at=None,
+        completed_at=status["completed_at"],
     )
 
 

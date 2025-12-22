@@ -87,14 +87,31 @@ def create_app() -> FastAPI:
         )
 
     # 注册路由
-    from app.api.routes import ai, auth, books, notes, powersync, shelves
+    from app.api.routes import (
+        ai,
+        auth,
+        billing,
+        books,
+        export,
+        invite,
+        notes,
+        powersync,
+        reading,
+        shelves,
+        users,
+    )
 
     app.include_router(auth.router, prefix="/api/v1")
     app.include_router(books.router, prefix="/api/v1")
     app.include_router(notes.router, prefix="/api/v1")
     app.include_router(shelves.router, prefix="/api/v1")
+    app.include_router(reading.router, prefix="/api/v1")
     app.include_router(ai.router, prefix="/api/v1")
     app.include_router(powersync.router, prefix="/api/v1")
+    app.include_router(billing.router, prefix="/api/v1")
+    app.include_router(invite.router, prefix="/api/v1")
+    app.include_router(export.router, prefix="/api/v1")
+    app.include_router(users.router, prefix="/api/v1")
 
     # 健康检查
     @app.get("/health")

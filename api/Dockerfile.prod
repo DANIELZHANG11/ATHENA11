@@ -1,0 +1,65 @@
+# Dockerfile for Athena API - Production
+# 基于中国国内镜像源，带重试机制
+
+FROM zukubq0aouv2k2.xuanyuan.run/python:3.11-slim
+
+WORKDIR /app
+
+# pip 配置：使用国内镜像 + 增加超时 + 重试
+ENV PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple \
+    PIP_TRUSTED_HOST=pypi.tuna.tsinghua.edu.cn \
+    PIP_DEFAULT_TIMEOUT=300 \
+    PIP_RETRIES=5
+
+# 环境变量配置
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    TZ=Asia/Shanghai
+
+ARG SKIP_HEAVY=true
+
+# 使用国内 Debian 镜像源加速
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list.d/debian.sources 2>/dev/null || \
+    sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list 2>/dev/null || true
+
+# 安装系统依赖（带重试机制）
+RUN for i in 1 2 3; do \
+      apt-get update && \
+      apt-get install -y --no-install-recommends \
+        gcc \
+        g++ \
+        libpq-dev \
+        curl \
+        && rm -rf /var/lib/apt/lists/* && break || \
+      (echo "Retry $i/3 failed, waiting..." && sleep 5); \
+    done
+
+# 升级 pip 并安装基础依赖（带重试机制）
+COPY requirements.txt /app/requirements.txt
+RUN for i in 1 2 3; do \
+      pip install --upgrade pip && \
+      pip install --no-cache-dir -r /app/requirements.txt && break || \
+      (echo "Retry $i/3 failed, waiting..." && sleep 10); \
+    done
+
+# 安装重型 AI 依赖（BGE-M3 Embedding + Edge TTS）
+# SKIP_HEAVY=false 时安装完整版本
+RUN if [ "$SKIP_HEAVY" != "true" ]; then \
+      for i in 1 2 3; do \
+        pip install --no-cache-dir FlagEmbedding edge-tts --timeout 300 && break || \
+        (echo "Retry $i/3 failed, waiting..." && sleep 10); \
+      done; \
+    fi
+
+# 复制应用代码
+COPY app /app/app
+COPY alembic.ini /app/alembic.ini
+COPY alembic /app/alembic
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]

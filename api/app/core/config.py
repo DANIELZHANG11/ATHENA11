@@ -36,6 +36,9 @@ class AppSettings(BaseSettings):
     # CORS
     cors_origins: str = "http://localhost:48173,http://localhost:3000"
 
+    # 前端 URL（用于生成链接）
+    frontend_url: str = "http://localhost:48173"
+
     @computed_field
     @property
     def cors_origins_list(self) -> list[str]:
