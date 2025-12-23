@@ -1,0 +1,164 @@
+# 雅典娜 (Athena) - AI 编码规则
+# 本文件定义 AI 代码生成的强制规范，违反将导致 CI 失败
+
+## 核心架构
+
+雅典娜是一款**离线优先阅读应用**，采用以下技术栈：
+- **跨平台**: Expo + Tamagui + Solito + Next.js (Monorepo)
+- **数据同步**: SQLite + PowerSync
+- **设计系统**: Tamagui Tokens (Apple HIG 对齐)
+
+## 🚫 严禁清单 (NEVER DO)
+
+### 1. 严禁硬编码样式值
+
+```typescript
+// ❌ 错误 - 硬编码颜色
+<View style={{ backgroundColor: '#007AFF' }} />
+<Text style={{ color: 'rgba(0,0,0,0.6)' }} />
+
+// ✅ 正确 - 使用 Token
+<View backgroundColor="$systemBlue" />
+<Text color="$labelSecondary" />
+```
+
+```typescript
+// ❌ 错误 - 硬编码像素值
+<View style={{ padding: 16, borderRadius: 12 }} />
+<Text style={{ fontSize: 17 }} />
+
+// ✅ 正确 - 使用 Token
+<View padding="$4" borderRadius="$md" />
+<Text fontSize="$body" />
+```
+
+### 2. 严禁直接使用 REST API 获取数据渲染 UI
+
+```typescript
+// ❌ 错误 - useEffect + fetch 模式
+function BookList() {
+  const [books, setBooks] = useState([])
+  useEffect(() => {
+    fetch('/api/v1/books').then(res => res.json()).then(setBooks)
+  }, [])
+  return books.map(book => <BookCard {...book} />)
+}
+
+// ✅ 正确 - 使用 PowerSync Live Query
+function BookList() {
+  const books = useLiveQuery<Book>(
+    'SELECT * FROM books WHERE is_deleted = 0'
+  )
+  return books.map(book => <BookCard {...book} />)
+}
+```
+
+### 3. 严禁引入非 Lucide 图标库
+
+```typescript
+// ❌ 错误 - 其他图标库
+import { FaBook } from 'react-icons/fa'
+import { IoBookOutline } from 'react-icons/io5'
+import Icon from '@expo/vector-icons/MaterialIcons'
+
+// ✅ 正确 - 仅使用 Lucide
+import { BookOpen, Search, Settings } from 'lucide-react'        // Web
+import { BookOpen, Search, Settings } from 'lucide-react-native' // Native
+```
+
+### 4. 严禁绕过 PowerSync 直接写入后端
+
+```typescript
+// ❌ 错误 - 直接调用 API 修改数据
+await fetch(`/api/v1/books/${bookId}`, {
+  method: 'PATCH',
+  body: JSON.stringify({ title: newTitle })
+})
+
+// ✅ 正确 - 通过 PowerSync 本地写入
+const { execute } = useMutation()
+await execute(
+  'UPDATE books SET title = ?, updated_at = ? WHERE id = ?',
+  [newTitle, new Date().toISOString(), bookId]
+)
+```
+
+## ✅ 必须遵守 (ALWAYS DO)
+
+### 1. 所有样式必须使用 Tamagui Token
+
+| 类别 | Token 前缀 | 示例 |
+|------|-----------|------|
+| 间距 | `$space.` 或 `$` | `padding="$4"`, `gap="$2"` |
+| 颜色 | `$color.` 或 `$` | `color="$label"`, `bg="$systemBlue"` |
+| 圆角 | `$radius.` | `borderRadius="$lg"` |
+| 字号 | `$fontSize.` | `fontSize="$body"` |
+| 尺寸 | `$size.` | `height="$touchTarget"` |
+
+### 2. 图标规范
+
+```typescript
+// 标准图标属性
+<BookOpen 
+  size={20}           // List: 20, NavBar: 22, TabBar: 24
+  strokeWidth={1.5}   // Regular: 1.5, Medium: 2
+  color="$systemBlue" // 使用语义色 Token
+/>
+```
+
+### 3. 按钮点击反馈
+
+所有可点击元素必须有触觉反馈：
+
+```typescript
+<Button
+  pressStyle={{
+    scale: 0.97,    // Apple 标准缩放
+    opacity: 0.8,
+  }}
+  animation="fast"
+>
+  点击我
+</Button>
+```
+
+### 4. 动画使用 Spring 配置
+
+```typescript
+// Apple 标准 Spring 参数
+animation="medium"  // stiffness: 170, damping: 26
+```
+
+### 5. 组件位置规范
+
+| 内容类型 | 位置 |
+|---------|------|
+| 可复用 UI 组件 | `packages/ui/src/` |
+| 业务逻辑 Hook | `packages/app/src/hooks/` |
+| PowerSync Schema | `packages/app/src/provider/powersync/schema.ts` |
+| 页面组件 | `apps/next/pages/` 或 `apps/expo/app/` |
+
+## 字体规范
+
+- **英文/数字**: Inter
+- **中文**: Noto Sans SC
+- **正文字号**: 17px (Apple 标准，严禁缩小)
+
+## REST API 允许场景
+
+仅以下场景可使用 REST API：
+1. **认证登录**: `POST /api/v1/auth/*`
+2. **文件上传**: `POST /api/v1/books/upload_init` + S3 Presigned URL
+3. **AI 对话**: `POST /api/v1/ai/chat` (SSE 流式)
+4. **支付相关**: `POST /api/v1/billing/*`
+5. **触发 OCR**: `POST /api/v1/books/{id}/ocr`
+
+## 数据时间戳
+
+- **存储**: 统一使用 ISO 8601 UTC 字符串 (`2025-12-23T12:00:00.000Z`)
+- **显示**: 必须转换为用户本地时区
+
+## 触控热区
+
+- **Mobile**: 最小 44×44 px
+- **Desktop**: 最小 32×32 px

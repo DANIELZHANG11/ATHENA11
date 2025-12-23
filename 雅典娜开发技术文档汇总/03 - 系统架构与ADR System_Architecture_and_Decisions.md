@@ -224,4 +224,136 @@ const textContent = await page.getTextContent();
 **在 CI/CD 中的强制措施**：
 *   **Lint Check**: 在 CI 中检查 `alembic` 迁移脚本，严禁检测到 `DROP COLUMN` 或 `ALTER COLUMN TYPE` 操作，除非带有特权 Tag `#FORCE_DROP`。
 
+---
 
+## 5. 前端技术栈 (Frontend Tech Stack)
+
+### ADR-013: Expo + Tamagui + Solito + Next.js Monorepo
+> **版本**: v1.0
+> **状态**: **APPROVED** ✅
+> **日期**: 2024-12
+
+#### 问题背景
+
+雅典娜需要同时覆盖 iOS、Android、Web 三端，并保持以下核心需求：
+1. **100% AI 驱动开发**：代码生成需要 AI 能够理解的统一语法（Tailwind 语境）
+2. **离线优先 (Local-First)**：深度集成 SQLite + PowerSync
+3. **跨平台共享**：组件和业务逻辑在三端高度复用
+4. **原生级性能**：特别是阅读器场景的文本渲染性能
+5. **Apple 像素级对齐**：设计系统需要严格遵循 Apple HIG
+
+原有技术栈 (Capacitor + React + Tailwind) 存在以下问题：
+- 移动端非原生渲染，性能瓶颈
+- Web 和 Native 组件无法真正共享
+- Tailwind 在 React Native 生态兼容性差
+
+#### 核心决策
+
+采用 **Expo + Tamagui + Solito + Next.js** 全栈跨平台架构：
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                     Monorepo 结构                          │
+├────────────────────────────────────────────────────────────┤
+│                                                            │
+│  apps/                                                     │
+│  ├── next/           # Next.js Web 应用                    │
+│  │   └── pages/      # Web 路由 (文件系统路由)              │
+│  └── expo/           # Expo Native 应用 (iOS/Android)      │
+│      └── app/        # Expo Router (文件系统路由)          │
+│                                                            │
+│  packages/                                                 │
+│  ├── ui/             # Tamagui 共享组件库                  │
+│  │   ├── tamagui.config.ts    # Design Tokens              │
+│  │   └── src/                 # 组件源码                   │
+│  └── app/            # 共享业务逻辑                        │
+│      ├── provider/   # PowerSync Provider                  │
+│      ├── hooks/      # 共享 Hooks                          │
+│      └── features/   # 功能模块                            │
+│                                                            │
+└────────────────────────────────────────────────────────────┘
+```
+
+#### 技术栈详解
+
+| 层级 | 技术选型 | 版本 | 职责 |
+|:-----|:---------|:-----|:-----|
+| **Build** | Turborepo | ^2.0 | Monorepo 构建编排 |
+| **Web Runtime** | Next.js | ^14.0 | SSR/SSG、Web 路由、API Routes |
+| **Native Runtime** | Expo | ^51.0 | iOS/Android 原生容器、Expo Router |
+| **跨平台路由** | Solito | ^4.0 | 统一导航 API (`useRouter`) |
+| **UI 框架** | Tamagui | ^1.100 | 跨平台组件库、Design Tokens |
+| **状态管理** | Zustand | ^4.5 | 轻量 UI 状态 |
+| **数据层** | PowerSync + op-sqlite | latest | 本地优先同步 |
+| **图标** | Lucide | ^0.400 | 统一图标库 |
+
+#### 选型理由
+
+| 需求 | Tamagui 优势 | 对比 React Native Paper / NativeBase |
+|:-----|:------------|:-------------------------------------|
+| **AI 驱动** | 类 Tailwind 语法 (`$space.4`, `$color.blue`) | AI 可直接生成符合规范的代码 |
+| **性能** | 编译时样式提取，零运行时开销 | 其他方案有运行时 CSS-in-JS 开销 |
+| **跨平台** | 同一组件渲染为 Web DOM + Native View | 真正的代码共享，非"适配" |
+| **Apple HIG** | 内置 Spring 动画、Squircle 圆角 | 原生支持 Apple 设计语言 |
+| **Design Tokens** | 原生支持 Token 系统 | 其他方案需要额外封装 |
+
+| 需求 | Solito 优势 | 对比手动封装 |
+|:-----|:-----------|:------------|
+| **路由统一** | `useRouter().push('/book/123')` 跨平台通用 | 无需分别调用 `next/router` 和 `expo-router` |
+| **链接组件** | `<SolitoLink href="/settings">` 自动适配 | 自动渲染为 `<a>` (Web) 或 `TouchableOpacity` (Native) |
+
+| 需求 | op-sqlite 优势 | 对比 expo-sqlite |
+|:-----|:--------------|:-----------------|
+| **性能** | C++ 实现，批量操作快 10x | expo-sqlite 使用 JS bridge |
+| **PowerSync 集成** | PowerSync 官方推荐 | 更好的同步性能 |
+
+#### 目录规范
+
+```
+athena/
+├── apps/
+│   ├── next/                    # Next.js Web App
+│   │   ├── pages/               # 页面路由
+│   │   ├── public/              # 静态资源
+│   │   └── next.config.js       # Next.js 配置
+│   └── expo/                    # Expo Native App
+│       ├── app/                 # Expo Router 路由
+│       ├── assets/              # Native 资源
+│       └── app.json             # Expo 配置
+├── packages/
+│   ├── ui/                      # 共享 UI 组件
+│   │   ├── src/
+│   │   │   ├── tamagui.config.ts   # Design Tokens
+│   │   │   ├── Button.tsx          # 按钮组件
+│   │   │   ├── Card.tsx            # 卡片组件
+│   │   │   ├── BookListCard.tsx    # 书籍卡片
+│   │   │   └── typography.ts       # 排版组件
+│   │   └── package.json
+│   └── app/                     # 共享业务逻辑
+│       ├── provider/
+│       │   └── powersync/       # PowerSync 初始化
+│       ├── hooks/               # 共享 Hooks
+│       ├── features/            # 功能模块
+│       └── package.json
+├── .cursorrules                 # AI 编码规则
+├── turbo.json                   # Turborepo 配置
+└── package.json                 # 根 package.json
+```
+
+#### 关键约束
+
+1. **零硬编码**：所有样式必须通过 Tamagui Token (`$space.4`, `$color.systemBlue`) 引用
+2. **图标唯一来源**：仅允许从 `lucide-react` / `lucide-react-native` 引入
+3. **组件位置**：可复用组件必须放在 `packages/ui`，业务逻辑放在 `packages/app`
+4. **路由统一**：使用 Solito 的 `useRouter()`，禁止直接使用 `next/router` 或 `expo-router`
+5. **数据层**：UI 只能读取 PowerSync 暴露的 SQLite 数据，禁止直接调用 REST API
+
+#### 迁移策略
+
+从现有 Capacitor 架构迁移采用**渐进式策略**：
+
+1. **Phase 1**：建立 Monorepo 骨架，配置 Tamagui Design Tokens
+2. **Phase 2**：迁移共享组件到 `packages/ui`
+3. **Phase 3**：实现 PowerSync Provider 在新架构下的初始化
+4. **Phase 4**：逐页面迁移，优先迁移阅读器核心功能
+5. **Phase 5**：废弃旧 Capacitor 项目

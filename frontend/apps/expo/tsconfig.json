@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@athena/ui": ["../../packages/ui/src"],
+      "@athena/ui/*": ["../../packages/ui/src/*"],
+      "@athena/app": ["../../packages/app/src"],
+      "@athena/app/*": ["../../packages/app/src/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "exclude": ["node_modules"]
+}

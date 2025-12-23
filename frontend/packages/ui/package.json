@@ -1,0 +1,30 @@
+{
+  "name": "@athena/ui",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tamagui.config": "./src/tamagui.config.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf node_modules dist"
+  },
+  "dependencies": {
+    "@tamagui/animations-react-native": "^1.100.0",
+    "@tamagui/core": "^1.100.0",
+    "@tamagui/config": "^1.100.0",
+    "react": "^18.3.1",
+    "react-native": "^0.74.0",
+    "tamagui": "^1.100.0"
+  },
+  "peerDependencies": {
+    "lucide-react": "^0.400.0",
+    "lucide-react-native": "^0.400.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "typescript": "^5.6.3"
+  }
+}

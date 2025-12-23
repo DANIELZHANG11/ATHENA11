@@ -1,0 +1,33 @@
+{
+  "name": "@athena/next",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .next node_modules"
+  },
+  "dependencies": {
+    "@athena/app": "workspace:*",
+    "@athena/ui": "workspace:*",
+    "@tamagui/core": "^1.100.0",
+    "@tamagui/next-plugin": "^1.100.0",
+    "lucide-react": "^0.400.0",
+    "next": "^14.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "solito": "^4.0.0",
+    "tamagui": "^1.100.0",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
+    "typescript": "^5.6.3"
+  }
+}
