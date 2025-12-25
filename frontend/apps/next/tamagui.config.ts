@@ -1,1 +1,1 @@
-export { config } from '@athena/ui/tamagui.config'
+export { config } from "@athena/ui/tamagui.config";

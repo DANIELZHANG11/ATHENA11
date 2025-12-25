@@ -1,12 +1,12 @@
 /**
  * Athena UI - 组件导出入口
- * 
+ *
  * 所有共享 UI 组件的统一导出
  */
 
 // Tamagui 配置
-export { config } from './tamagui.config'
-export { TamaguiProvider } from './TamaguiProvider'
+export { config } from "./tamagui.config";
+export { TamaguiProvider } from "./TamaguiProvider";
 
 // Tamagui 核心重导出 (从 tamagui 包导入完整组件)
 export {
@@ -20,7 +20,7 @@ export {
   ScrollView,
   Separator,
   Spinner,
-  Input,
+  Input as TamaguiInput,
   TextArea,
   Switch,
   Checkbox,
@@ -32,7 +32,7 @@ export {
   Tabs,
   Button as TamaguiButton,
   type GetProps,
-} from 'tamagui'
+} from "tamagui";
 
 // 排版组件
 export {
@@ -46,11 +46,19 @@ export {
   Subhead,
   Footnote,
   Caption,
-} from './typography'
+} from "./typography";
 
 // 通用组件
-export { Button, type ButtonProps } from './Button'
-export { Card, type CardProps } from './Card'
+export { Button, type ButtonProps } from "./Button";
+export { Card, type CardProps } from "./Card";
+export {
+  Input,
+  InputBase,
+  InputWithIcon,
+  type InputProps,
+  type InputWithIconProps,
+} from "./Input";
+export { Logo, type LogoProps } from "./Logo";
 
 // 业务组件
-export { BookListCard, type BookListCardProps } from './BookListCard'
+export { BookListCard, type BookListCardProps } from "./BookListCard";

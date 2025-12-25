@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3000",
+    "dev": "next dev --port 48173 --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -13,6 +13,8 @@
   "dependencies": {
     "@athena/app": "workspace:*",
     "@athena/ui": "workspace:*",
+    "@fontsource/inter": "^5.0.0",
+    "@fontsource/noto-sans-sc": "^5.0.0",
     "@tamagui/core": "^1.100.0",
     "@tamagui/next-plugin": "^1.100.0",
     "lucide-react": "^0.400.0",

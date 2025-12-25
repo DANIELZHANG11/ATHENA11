@@ -1,0 +1,65 @@
+name: Authentication CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  quality:
+    name: Quality Check (Lint, Format, Typecheck)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: 'frontend/pnpm-lock.yaml'
+          
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: frontend
+        
+      - name: Lint
+        run: pnpm lint
+        working-directory: frontend
+
+      - name: Format Check
+        run: pnpm format:check
+        working-directory: frontend
+
+      - name: Type Check
+        run: pnpm typecheck
+        working-directory: frontend
+
+  test:
+    name: Unit Tests & Coverage
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: 'frontend/pnpm-lock.yaml'
+          
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: frontend
+        
+      - name: Test Authentication
+        run: pnpm test:coverage
+        working-directory: frontend
