@@ -28,6 +28,11 @@ const interFont = createFont({
     7: 22, // title2
     8: 28, // title1
     9: 34, // largeTitle
+    // Fix for Button size warning
+    small: 13,
+    medium: 16,
+    large: 20,
+    true: 16,
   },
   lineHeight: {
     1: 16, // caption
@@ -39,6 +44,11 @@ const interFont = createFont({
     7: 28, // title2
     8: 34, // title1
     9: 41, // largeTitle
+    // Fix for Button size warning
+    small: 18,
+    medium: 21,
+    large: 25,
+    true: 21,
   },
   weight: {
     regular: "400",
@@ -56,6 +66,11 @@ const interFont = createFont({
     7: 0,
     8: 0,
     9: -0.5,
+    // Fix for Button size warning
+    small: 0,
+    medium: 0,
+    large: 0,
+    true: 0,
   },
   face: {
     400: { normal: "Inter_400Regular" },
